@@ -1,0 +1,293 @@
+@import "mixins";
+@import "variables";
+
+%round-borders-primary {
+    border-radius: $border-radius !important;
+}
+
+nav.navigation-module {
+    padding: 30px 60px 10px;
+    margin: 0px auto 20px;    
+    color: #81858c;    
+    font-weight: 700;    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .title {
+        font-size: 20px;
+        display: flex;
+        flex: 1;
+    }
+
+    .add-button {
+        margin-right: 10px;
+        float: right !important;
+        color: $button-primary-color;
+        font-weight: 700;
+        font-size: 13px;
+
+        .mat-icon {            
+            margin-right: 10px;
+            font-size: 22px;
+            vertical-align: middle;
+        }
+    }
+}
+
+.content-wrap {
+    padding: 0px 60px;
+
+    .table-wrap {
+        .header {
+            margin: 0px auto;
+            padding: 0px 0px 20px;            
+            position: relative;     
+            
+            nav {
+                padding: 0px 0px 25px;
+                margin: 0px;                
+                position: relative;     
+
+                .title {
+                    font-size: 24px;
+                    color: $primary-color;    
+                    font-weight: 700;                            
+                }
+
+                button {
+                    font-size: 15px;
+                    color: $title-color;
+                    font-weight: 600;
+
+                    &.add {
+                        position: absolute;
+                        top: 0px;
+                        right: 0px;     
+                        
+                        .mat-icon {            
+                            margin-right: 10px;
+                            font-size: 25px;
+                            vertical-align: middle;
+                        }
+                    }
+                }
+            }                     
+        }
+    }
+}
+
+.tag-primary {        
+    margin-right: 10px;
+    padding: 5px 10px;
+    display: inline-block !important;    
+    font-size: 12px;
+    line-height: 12px;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: 300;
+    background-color: $tag-primary !important;
+}
+
+.mat-table {
+    .mat-header-cell {
+        text-transform: uppercase;
+        color: $title-color;
+        font-weight: 600;
+    }
+}
+
+.search {
+    margin: 10px 10px;
+    display: inline-block;
+    border-radius: $border-radius;
+    background-color: $tag-secondary;
+    position: relative;
+
+    mat-icon {
+        font-size: 14px;
+        align-self: center;
+        vertical-align: middle;
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        z-index: 1;
+    }
+
+    input {
+        padding: 5px 10px 5px 28px !important;
+        width: 100%;
+        position: relative;
+        font-size: 12px;
+        height: 30px;
+        background-color: transparent !important;
+        font-weight: 300 !important;
+        z-index: 2;
+    }       
+}
+
+::ng-deep .tooltip {
+    font-size: 14px !important;
+}
+
+@import "dialog";
+
+@import "autocomplete";
+
+.autocomplete-arrow-down{
+    input {
+        padding-right: 25px !important;
+    }
+}
+
+.dialog-content-wrapper{
+    background: #FFF;
+    width: 100%;
+
+    .mat-dialog-content{
+        align-items: center;
+        display: flex;
+        padding: 0px;
+        .title {
+            max-width: 300px;
+            display: flex;
+            flex: 1;     
+            color: #434A54;
+            font-size: 19px;
+            font-weight: 700;
+            text-align: left;     
+            align-items: center;   
+            position: relative;
+        }
+
+        .close {
+            .close-dialog {
+                cursor: pointer;
+            }
+        }
+
+        .custom-error{
+            
+            .mat-form-field-label, mat-form-field-label {
+                color:red !important;
+            }
+            .mat-select-value-text{
+                color:red !important;
+            }
+        }
+        
+        .content-save-button {
+            text-align: center;
+            button{
+                color: #FFF;
+                background-color: #845579 !important;
+                &:hover{
+                    background-color: #6D335E !important;
+                }
+            }
+        }
+
+        .custom-error{
+            .mat-form-field-flex{
+                border:1px solid red !important;
+            }
+        }
+        
+        .mat-form-field-infix{
+            width: 300px !important;
+        }
+        .mat-form-field{
+            width:300px !important;
+        }
+
+        input{
+            width: 300px !important;
+        }
+        .form-input {
+            width: 300px !important;
+        }
+    }    
+}
+
+@mixin list-styles {
+    background: #FFF;
+    width: 100%;
+    padding: 10px 60px;
+
+    .navbar{
+        padding: 20px 60px 20px 53px;
+        width: 100%;
+        vertical-align: middle;
+        align-content: center;
+        justify-content: space-between;
+        display: flex;
+        align-items: center;
+        position: relative;
+        
+        .title {
+            max-width: 300px;
+            display: flex;
+            flex: 1;     
+            color: #434A54;
+            font-size: 19px;
+            font-weight: 700;
+            text-align: left;     
+            align-items: center;   
+            position: relative;
+        }
+    }
+
+    .content{
+        .title-block{
+            padding-left: 15px;
+            font-size: 18px;
+            color: #60656e;
+            font-weight: bold;
+            font-family: Arial;
+            letter-spacing: 2px;
+            padding-bottom: 30px;
+            padding-top: 35px;
+        }
+    
+        .new-button-content{
+            align-self: flex-end;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 8px;
+            button{
+                color: #FFF;
+                background-color: #845579 !important;
+                margin-left: 120px;
+                &:hover{
+                    background-color: #6D335E !important;
+                }
+            }
+        }
+
+        .table-wrap{
+            border: solid 1px #ccc;
+            ::ng-deep {
+                table {
+                    width: 100%;
+                    tbody{
+                        tr:hover{
+                            background: #6D335E;
+                            td {
+                                color: #FFF;
+                                .edit, .delete {
+                                    color: #FFF;                                    
+                                }    
+                            }
+                        }
+    
+                        .edit{
+                            cursor: pointer;
+                            color: #999;
+                        }
+                    }       
+                }
+            }
+
+        }
+    }
+}

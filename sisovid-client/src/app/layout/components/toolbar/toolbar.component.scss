@@ -1,0 +1,163 @@
+@import "src/@fuse/scss/fuse";
+@import "src/config/scss/avatar";
+
+:host {
+    position: relative;
+    display: flex;
+    flex: 0 0 auto;
+    z-index: 4;
+
+    &.below {
+        z-index: 2;
+    }
+
+    .logo-icon {        
+        cursor: pointer;
+    }
+
+    .userName {
+        padding-right: 10px;
+        display: inline-block;
+        font-weight: 600;
+    }
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+        line-height: 40px; 
+    }
+
+    .fiscalia{
+        height: 100%;
+        padding-top: 13px;
+        background: #031142;
+        border-bottom-right-radius: 34px;
+    }
+
+    .logo-icon {
+        margin: 0px 30px;
+        /*height: 50px;
+        width: 180px;*/
+    }
+
+    .dependency {
+        padding-left: 60px;
+        text-transform: uppercase;
+        font-size: 17px;
+        font-weight: 600;
+        color: #434a54;
+    }
+
+    .mat-toolbar {
+        background: inherit;
+        color: inherit;
+        position: relative;
+
+        .loading-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+        }
+    }
+
+    .mat-toolbar-row, .mat-toolbar-single-row {
+        height: 60px;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+
+        .logo-icon {
+            width: 38px;
+            cursor: pointer;
+        }
+    }
+
+    .username {
+        font-weight: 600;
+    }   
+
+    .user-button,
+    fuse-search-bar,
+    .language-button,
+    .quick-panel-toggle-button {
+        min-width: 64px;
+        height: 64px;
+        color: #60656e;
+          
+        @include media-breakpoint-down('xs') {
+            height: 76px;
+        }
+    }
+
+    .navbar-toggle-button {
+        min-width: 76px;
+        height: 76px;
+    }
+
+    .toolbar-separator {
+        height: 64px;
+        width: 1px;
+        background: rgba(0, 0, 0, .12);
+
+        @include media-breakpoint-down('xs') {
+            height: 76px;
+        }
+    }
+    @mixin blue-button() {
+        .navbar-toggle-button {
+            background-color: #6D335E;
+            border-radius: 0px !important;
+            height: 60px !important;
+            min-width: 60px !important;
+        }
+        .menu-icon {
+            font-size: 34px !important;
+            line-height: 40px !important;
+            height: 40px !important;
+            width: 50px !important;
+        }
+    }
+
+    @media only screen 
+    and (max-width: 320px) {
+        .logo-icon {
+            width: 100px !important;
+        }
+    }
+    @media only screen 
+    and (min-width: 321px) 
+    and (max-width: 440px) {
+        .logo-icon {
+            width: 160px !important;
+        }
+    }
+
+    @media only screen 
+    and (min-width: 768px) 
+    and (max-width: 1279px) {
+       @include blue-button();
+    }
+    
+    @media only screen
+    and (min-width: 320px)
+    and (max-width: 767px) {
+        .logo-icon {
+            height: 100% !important;
+            margin: 0px !important;
+        }
+        .userName {
+           font-size: 10px !important;
+           width: 70px !important;
+           overflow: hidden;
+           text-overflow: ellipsis ;
+        }
+        .toolbar-separator {
+            height: 60px !important;
+        }
+        @include blue-button();
+    }
+}

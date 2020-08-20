@@ -1,0 +1,75 @@
+@import "src/@fuse/scss/fuse";
+@import "src/config/scss/identity";
+
+#list-roles {
+  @include list-styles;
+}
+
+.dialog-content-wrapper-roleisai {
+  background: #fff;
+  width: 100%;
+
+  .mat-dialog-content {
+    align-items: center;
+    display: flex;
+    padding: 0px;
+    .title {
+      max-width: 300px;
+      display: flex;
+      flex: 1;
+      color: #434a54;
+      font-size: 19px;
+      font-weight: 700;
+      text-align: left;
+      align-items: center;
+      position: relative;
+    }
+
+    .close {
+      .close-dialog {
+        cursor: pointer;
+      }
+    }
+
+    .custom-error {
+      .mat-form-field-label,
+      mat-form-field-label {
+        color: red !important;
+      }
+      .mat-select-value-text {
+        color: red !important;
+      }
+    }
+
+    .content-save-button {
+      text-align: center;
+      button {
+        color: #fff;
+        background-color: #845579 !important;
+        &:hover {
+          background-color: #6d335e !important;
+        }
+      }
+    }
+
+    .custom-error {
+      .mat-form-field-flex {
+        border: 1px solid red !important;
+      }
+    }
+
+    .mat-form-field-infix {
+      width: 300px !important;
+    }
+    .mat-form-field {
+      width: 300px !important;
+    }
+
+    input {
+      width: 300px !important;
+    }
+    .form-input {
+      width: 300px !important;
+    }
+  }
+}

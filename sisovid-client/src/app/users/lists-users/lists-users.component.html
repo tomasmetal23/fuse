@@ -1,0 +1,83 @@
+<div class="page-layout" fusePerfectScrollbar id="list-users">
+  <div class="content">
+    <div class="title-block">Usuarios</div>
+
+    <div class="new-button-content">
+        <button  (click)="openFormModal(null)" mat-raised-button color="accent"   mat-button class="primary">Nuevo usuario</button>
+    </div>
+    
+
+    <div class="table-wrap">
+      <table mat-table [dataSource]="dataSource">
+          
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef > Nombre </th>
+            <td mat-cell *matCellDef="let user" >{{user.name}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="last_name">
+            <th mat-header-cell *matHeaderCellDef > Apellidos </th>
+            <td mat-cell *matCellDef="let user" >{{user.last_name}} {{user.m_last_name}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef > Email </th>
+            <td mat-cell *matCellDef="let user" >{{user.email}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="username">
+            <th mat-header-cell *matHeaderCellDef > Usuario </th>
+            <td mat-cell *matCellDef="let user" >{{user.username}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef > Rol </th>
+            <td mat-cell *matCellDef="let user" >
+              <span *ngIf="user.userRol">
+                  {{user.userRol.rol.name}}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="direction">
+              <th mat-header-cell *matHeaderCellDef > Direccion </th>
+              <td mat-cell *matCellDef="let user" >
+                <span *ngIf="user.direction">
+                    {{user.direction.name}}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="area">
+                <th mat-header-cell *matHeaderCellDef > Area </th>
+                <td mat-cell *matCellDef="let user" >
+                  <span *ngIf="user.area">
+                      {{user.area.name}}
+                  </span>
+                </td>
+              </ng-container>
+
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                <td mat-cell *matCellDef="let user"> 
+                    
+                    <button (click)="openFormModal(user)" mat-icon-button matTooltip="Click para editar" class="iconbutton">
+                        <mat-icon  mat-list-icon class="edit">edit</mat-icon> 
+                    </button>
+
+                    <button (click)="delete(user)" mat-icon-button matTooltip="Click para eliminar" class="iconbutton" color="warn">
+                        <mat-icon aria-label="Delete" class="delete">delete</mat-icon>
+                      </button>
+                      
+                </td>
+            </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="10"></mat-paginator>
+    </div>
+
+  </div>
+</div>

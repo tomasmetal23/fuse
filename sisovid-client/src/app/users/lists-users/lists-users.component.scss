@@ -1,0 +1,6 @@
+@import "src/@fuse/scss/fuse";
+@import "src/config/scss/identity";
+
+#list-users {
+    @include list-styles;
+}

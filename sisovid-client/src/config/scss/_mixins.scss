@@ -1,0 +1,20 @@
+@mixin button-primary() {
+    padding: 0px 35px !important;
+    width: auto !important;        
+    border-radius: 8px !important;
+    font-size: 13px !important; 
+    font-weight: 300;
+    background-color: $button-primary-color !important; 
+    transition: all 0.45s ease !important;
+    color: #fff !important;
+    cursor: pointer;
+    line-height: 35px !important;
+    &:hover {
+        background-color: $button-primary-color-hover !important;
+    }
+
+    mat-icon {
+        padding-right: 10px;
+        font-size: 22px !important;
+    }
+}

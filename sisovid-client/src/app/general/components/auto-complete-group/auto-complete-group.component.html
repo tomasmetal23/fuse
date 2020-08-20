@@ -1,0 +1,11 @@
+<mat-form-field class="autocomplete-arrow-down" [fxFlex]="widthFlex">
+  <input type="text" (blur)="onBlur($event)" [placeholder]="placeHolder" aria-label="Number"
+    matInput [formControl]="dataInput" [matAutocomplete]="dataAutoComplete" [required]="isRequired">
+  <mat-autocomplete #dataAutoComplete="matAutocomplete" (optionSelected)="optionSelected($event)">
+    <mat-optgroup *ngFor="let group of filteredData | async" [label]="group.type">
+      <mat-option *ngFor="let data of group.data" [value]="nameUser(data)">
+        {{ nameUser(data) }}
+      </mat-option>
+    </mat-optgroup>
+  </mat-autocomplete>
+</mat-form-field>

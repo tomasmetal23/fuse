@@ -1,0 +1,38 @@
+<div class="page-layout" fusePerfectScrollbar id="list-areas">
+  <div class="content">
+    <div class="title-block">Áreas de {{ directionName }}</div>
+
+    <div class="new-button-content">
+      <button  mat-button class="primary float-left" (click)="openFormModal({data: null, name: directionName, directionId: directionId })">Nueva Área</button>
+      <button  mat-button class="primary float-right" [routerLink]="['/direcciones']">Regresar a Dirección</button>
+    </div>   
+
+    <div class="table-wrap">
+      <table mat-table [dataSource]="dataSource">
+          
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef > Nombre </th>
+            <td mat-cell *matCellDef="let area" >{{area.name}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="remove">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let area">
+              <button (click)="openFormModal({ data: area, name: directionName, directionId: directionId })" mat-icon-button matTooltip="Click para editar" class="iconbutton">
+                  <mat-icon  mat-list-icon class="edit">edit</mat-icon> 
+              </button>
+
+              <button  mat-icon-button matTooltip="Click to Delete" class="iconbutton" color="warn">
+                    <mat-icon (click)="delete(area)" aria-label="Delete" class="delete">delete</mat-icon>
+                  </button>
+              </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="10"></mat-paginator>
+    </div>
+  </div>
+</div>

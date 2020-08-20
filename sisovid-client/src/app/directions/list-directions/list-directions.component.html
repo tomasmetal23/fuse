@@ -1,0 +1,48 @@
+<div class="page-layout" fusePerfectScrollbar id="list-directions">
+  <div class="content">
+    <div class="title-block">Direcciones</div>
+
+    <div class="new-button-content">
+    <button (click)="openFormModal(null)" mat-button class="primary">Nueva Dirección</button>
+  </div>
+
+    <div class="table-wrap">
+      <table mat-table [dataSource]="dataSource">
+          
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef > Nombre </th>
+            <td mat-cell *matCellDef="let direction" >{{direction.name}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="responsible">
+            <th mat-header-cell *matHeaderCellDef > Responsable </th>
+            <td mat-cell *matCellDef="let direction:Direction" > <span *ngIf="isset(direction.user)" >{{direction.user.name}}</span>  </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ver-areas">
+              <th mat-header-cell *matHeaderCellDef > Areas </th>
+              <td mat-cell *matCellDef="let direction:Direction" > <a class="area-link" [routerLink]="['/direcciones', direction.id,'areas']">Areas </a></td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                <td mat-cell *matCellDef="let direction">
+                  <button (click)="openFormModal(direction)" mat-icon-button matTooltip="Click para editar" class="iconbutton">
+                      <mat-icon  mat-list-icon class="edit">edit</mat-icon> 
+                  </button>
+
+                  <button (click)="delete(direction)"   mat-icon-button matTooltip="Click para eliminar" class="iconbutton" color="warn">
+                    <mat-icon aria-label="Delete" class="delete">delete</mat-icon>
+                  </button>
+                </td>
+            </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="10"></mat-paginator>
+    </div>
+
+  </div>
+</div>

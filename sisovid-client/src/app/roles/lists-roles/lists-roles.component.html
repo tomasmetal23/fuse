@@ -1,0 +1,47 @@
+<div id="list-roles" class="page-layout" fusePerfectScrollbar>
+  <div class="content">
+    <div class="title-block">Roles</div>
+
+    <div class="new-button-content">
+      <button (click)="openFormModal(null)" mat-button class="primary">Nuevo Rol</button>
+    </div>
+
+
+    <div class="table-wrap">
+      <table mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Nombre </th>
+          <td mat-cell *matCellDef="let role">{{role.name}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef> Tipo de rol </th>
+          <td mat-cell *matCellDef="let role">{{ role.code === 'admin' ? 'Administrador' : role.type === 'DIRECTION' ? 'Dirección' : 'Área' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="permissions">
+          <th mat-header-cell *matHeaderCellDef> Permisos </th>
+          <td mat-cell *matCellDef="let role">{{ role.code === 'admin' ? '' : role.permissions === 'EDIT' ? 'Editar' : 'Ver' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Acciones </th>
+          <td mat-cell *matCellDef="let role">
+            <button *ngIf="role.code !== 'admin'" (click)="openFormModal(role)" mat-icon-button matTooltip="Click para editar" class="iconbutton">
+              <mat-icon mat-list-icon class="edit">edit</mat-icon>
+            </button>
+            <button *ngIf="role.code !== 'admin'" (click)="delete(role)" mat-icon-button matTooltip="Click para eliminar" class="iconbutton"
+              color="warn">
+              <mat-icon aria-label="Delete" class="delete" *ngIf="role.code !== 'admin'">delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+  </div>
+</div>

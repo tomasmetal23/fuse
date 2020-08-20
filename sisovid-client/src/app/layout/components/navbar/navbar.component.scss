@@ -1,0 +1,117 @@
+@import "src/@fuse/scss/fuse";
+
+fuse-sidebar {
+    background: red;
+
+    .dependency {
+        padding: 20px 10px;
+        background-color: #6D335E;
+        color: #fff;
+        text-align: center;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    &.folded:not(.unfolded) {
+
+        .dependency {
+            display: none;
+        }
+
+        .navbar-vertical {
+
+            .navbar-header {
+                padding: 0 13px;
+
+                .toggle-sidebar-opened {
+                    color: #fff;
+                }
+
+                .logo {
+
+                    .logo-text {
+                        opacity: 0;
+                        transition: opacity 200ms ease;
+                    }
+                }
+            }
+        }
+    }
+}
+
+navbar {
+
+    &:not(.top-navbar) {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .navbar-vertical {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+
+        .navbar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            padding: 0 8px 0 24px;
+            transition: padding 200ms ease;
+            background-color: #6D335E;
+            @include mat-elevation(1);
+
+            .logo {
+                display: flex;
+                align-items: center;
+
+                .logo-icon {
+                    width: 140px;
+                    /*filter: brightness(0) invert(1);*/           
+                    cursor: pointer;      
+                }
+
+                .logo-text {
+                    margin-left: 8px;
+                    font-size: 20px;
+                    font-weight: 300;
+                    letter-spacing: 0.4px;
+                }
+            }
+
+            .toggle-sidebar-folded {
+                color: #fff;
+            }
+        }
+
+        .navbar-content {
+            flex: 1 1 auto;
+            overflow-y: auto;
+        }
+        .footer {
+            /*background-color: #fff;*/
+            .slogan {
+                text-align: center;
+                padding: 15px 0px;
+                color: #FFF;
+                font-weight: 600;
+                img {
+                    width: 120px;
+                }
+            }
+        }
+    }
+
+    &.right-navbar {
+
+        .toggle-sidebar-opened {
+            color: #fff !important;
+
+            mat-icon {
+                transform: rotate(180deg);
+                color: #fff;
+            }
+        }
+    }
+}

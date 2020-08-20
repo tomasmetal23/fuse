@@ -1,0 +1,47 @@
+<ng-container *ngIf="layout == 'vertical'">
+
+  <div class="navbar-vertical">
+
+    <div class="navbar-header">
+
+      <div class="logo" style="padding-left: 25px;">
+        <img [routerLink]="'/'" class="logo-icon" src="assets/images/sisovid_1.png">
+      </div>
+
+      <!--<button mat-icon-button class="toggle-sidebar-folded" (click)="toggleSidebarFolded()" fxHide.lt-lg>
+        <mat-icon *ngIf="!isFolded()">chevron_left</mat-icon>
+        <mat-icon *ngIf="isFolded()">menu</mat-icon>
+      </button>-->
+
+      <button mat-icon-button class="toggle-sidebar-opened" (click)="toggleSidebarOpened()" fxHide.gt-md>
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+
+    </div>
+
+    <div class="navbar-content" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{suppressScrollX: true}">
+      <div class="dependency">
+        <img [routerLink]="'/'" class="logo-icon" src="assets/images/sistema_desaparecidos.png">
+      </div>
+      <fuse-navigation layout="vertical"></fuse-navigation>
+    </div>
+
+    <div class="footer">
+      <div class="slogan">
+        <!--<img src="assets/images/logo.png" />-->
+        <div>JALISCO</div>
+        <div>Gobierno del Estado © {{year}}</div>
+      </div>
+    </div>
+
+  </div>
+
+</ng-container>
+
+<ng-container *ngIf="layout == 'horizontal'">
+
+  <div class="navbar-horizontal">
+    <fuse-navigation layout="horizontal"></fuse-navigation>
+  </div>
+
+</ng-container>

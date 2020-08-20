@@ -1,0 +1,34 @@
+.avatar {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    margin: auto;
+    background-color: #001970;
+    color: #fff;
+    border-radius: 100%;
+    font-size: 17px !important;
+    font-weight: 300 !important;
+    position: relative;
+    text-transform: uppercase;
+    overflow: hidden;
+    letter-spacing: 1px;
+    min-width: initial;
+
+    .initials {
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .img {
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        background-color: #474747;
+    }
+}

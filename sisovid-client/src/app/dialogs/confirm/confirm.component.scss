@@ -1,0 +1,70 @@
+@import "src/@fuse/scss/fuse";
+@import "src/config/scss/identity";
+
+.text-center {
+  text-align: center;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.header {
+  .close {
+    position: absolute;
+    top: 0px;
+    right: 0;
+  }
+}
+
+.confirmation {
+  font-size: 26px;
+  font-weight: bold;
+  color: #845579;
+}
+
+.content-dialog {
+  color: #434a54;
+  padding: 20px 50px 40px 50px;
+  font-size: 17px !important;
+  text-align: center;
+  max-width: 500px;
+  text-align: center;
+}
+
+.btn-accept {
+  color: #fff !important;
+  background-color: #845579 !important;
+  padding: 0px 35px !important;
+  width: auto !important;
+  border-radius: 8px !important;
+  font-size: 15px !important;
+  font-weight: 500;
+  transition: all 0.45s ease !important;
+  line-height: 35px !important;
+  margin-left: 16px;
+}
+
+.btn-cancel {
+  color: #434a54;
+  background-color: #e5e5e6 !important;
+  margin-right: 10px;
+  line-height: 35px !important;
+  font-size: 14px !important;
+  box-shadow: none !important;
+  font-size: 15px !important;
+  font-weight: 500;
+  border-radius: 8px !important;
+}
+
+.btn-accept:hover {
+  background-color: #6d335e !important;
+}
+
+.btn-cancel:hover {
+  background-color: #cfcfd1 !important;
+}

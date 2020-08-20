@@ -1,0 +1,15 @@
+@import "src/@fuse/scss/fuse";
+@import "src/config/scss/identity";
+
+#list-directions {
+    @include list-styles;
+    tr:hover {
+        a.area-link {
+            color: #FFF;
+        }
+    }
+    a.area-link {
+        color: black;
+        font-weight: bold;
+    }
+}

@@ -1,0 +1,9 @@
+#test {
+    padding: 20px;
+    border: 1px solid orange;
+    color: blue;
+}
+
+.test {
+    color: purple;
+}

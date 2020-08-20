@@ -1,0 +1,1845 @@
+<div class="page-layout" fusePerfectScrollbar>
+
+  <div class="content">
+
+    <div class="stepper-wrapper" *ngIf="catalogs" #catalogsContainer>
+
+      <mat-tab-group [selectedIndex]="tabSelected" (selectedIndexChange)="changeTab($event)">
+
+        <mat-tab label="Control interno 1">
+
+          <form fxLayout="column" [formGroup]="formStep1" autocomplete="off">
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div class="title-block first" fxFlex="99" fxLayout.lt-md="column">
+                <label class="title" fxFlex="34">Identificadores</label>
+                <label *ngIf="editing && dataEdit" fxFlex="14" class="id">ID: {{dataEdit.id}}</label>
+                <label *ngIf="editing && dataEdit" fxFlex="26" class="date">Fecha: {{created_date}}</label>
+                <label *ngIf="hasEditPermissions" class="edit" fxFlex="24">
+                  <button *ngIf="editing" (click)="activateEditMethod()" class="edit-button" mat-raised-button
+                    color="accent">{{!activeEdit ? 'Editar' : 'Cancelar edición'}} <img [src]="getImageEdit()"></button>
+                </label>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Fecha de la denuncia</mat-label>
+                <input matInput placeholder="Fecha de la denuncia" [readonly]="true"
+                  [value]="(created_date != '') ? created_date : todayDate" required>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Distrito Fe</mat-label>
+                  <mat-select placeholder="Distrito Fe" formControlName="fe_district_id" required>
+                    <mat-option *ngFor="let fe_district of catalogs.fe_districts" [value]="fe_district.id">
+                      {{fe_district.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Tipo de expediente</mat-label>
+                  <mat-select placeholder="Tipo de expediente" formControlName="file_type_id" required>
+                    <mat-option *ngFor="let file_type of catalogs.file_types" [value]="file_type.id">
+                      {{file_type.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="row">
+                <mat-form-field fxFlex="70" appearance="outline">
+                  <mat-label>Número de expediente</mat-label>
+                  <input matInput placeholder="Número de expediente" formControlName="file_number"
+                    maxlength="{{maxLengthMain}}" (keypress)="numberOnly($event)" required>
+                </mat-form-field>
+                <label style="display: flex; align-items: center;">/</label>
+                <mat-form-field fxFlex="30" appearance="outline">
+                  <mat-label>Año</mat-label>
+                  <input [textMask]="{mask: maskYear}" matInput formControlName="year_file_number"
+                    (keypress)="numberOnly($event)" (blur)="onBlurYear($event)" required>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Judicializable</mat-label>
+                <mat-select placeholder="Judicializable" formControlName="judicializable">
+                  <mat-option *ngFor="let value of yesNoObject" [value]="value">
+                    {{ (value) ? 'Sí' : 'No' }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Vía de recepción</mat-label>
+                <mat-select placeholder="Vía de recepción" formControlName="reception_via_id">
+                  <mat-option *ngFor="let reception_via of catalogs.reception_vias" [value]="reception_via.id">
+                    {{ reception_via.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Clasificación inicial del delito</mat-label>
+                  <mat-select placeholder="Clasificación inicial del delito"
+                    formControlName="crime_initial_classification_id" required>
+                    <mat-option *ngFor="let crime of catalogs.crimes" [value]="crime.id">
+                      {{crime.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </mat-tab>
+
+        <!--STEP 1------------------------------------------------------------------------------------------------------------------------------------>
+
+        <mat-tab label="Persona desaparecida" [disabled]="checkDisabledTab(0)">
+          <form fxLayout="column" [formGroup]="formStep2" autocomplete="off">
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div class="title-block first" fxFlex="99" fxLayout.lt-md="column">
+                <label class="title" fxFlex="34">Generales de la persona desaparecida</label>
+                <label *ngIf="editing && dataEdit" fxFlex="14" class="id">ID: {{dataEdit.id}}</label>
+                <label *ngIf="editing && dataEdit" fxFlex="26" class="date">Fecha: {{created_date}}</label>
+                <label *ngIf="hasEditPermissions" class="edit" fxFlex="24">
+                  <button *ngIf="editing" (click)="activateEditMethod()" class="edit-button" mat-raised-button
+                    color="accent">{{!activeEdit ? 'Editar' : 'Cancelar edición'}} <img [src]="getImageEdit()"></button>
+                </label>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Nombre</mat-label>
+                <input matInput placeholder="Nombre" formControlName="victim_name" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Apellido paterno</mat-label>
+                <input matInput placeholder="Apellido paterno" formControlName="victim_lastname"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Apellido materno</mat-label>
+                <input matInput placeholder="Apellido materno" formControlName="victim_mothers_lastname"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column" appearance="outline">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Nombre completo</mat-label>
+                <input matInput placeholder="Nombre completo" [readonly]="true" [value]="getVictimFullName()">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Alias</mat-label>
+                <input (blur)="onBlurAliasVictim($event)" matInput placeholder="Alias" formControlName="victim_alias"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33"
+                [ngClass]="{'error-required': formStep2.get('victim_birthdate').invalid && formStep2.get('victim_birthdate').touched , 'mat-form-field-invalid': formStep2.get('victim_birthdate').invalid && formStep2.get('victim_birthdate').touched}"
+                appearance="outline">
+                <mat-label>Fecha de nacimiento</mat-label>
+                <input matInput (dateChange)="setDateForm2($event, 'victim_birthdate')"
+                  [value]="getDateValue(formStep2, 'victim_birthdate')"
+                  (dateInput)="setDateForm2($event, 'victim_birthdate')" [matDatepicker]="dateBirthVictim"
+                  placeholder="Fecha de nacimiento *" disabled [max]="maxDate">
+                <mat-datepicker-toggle matSuffix [for]="dateBirthVictim"></mat-datepicker-toggle>
+                <mat-datepicker #dateBirthVictim [disabled]="editing && !activeEdit"></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Edad al momento de la desaparición</mat-label>
+                  <mat-select placeholder="Edad al momento de la desaparición"
+                    formControlName="victim_year_or_month_when_fact_id">
+                    <mat-option *ngFor="let age of catalogs.ages" [value]="age.id">
+                      {{age.age}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Sexo</mat-label>
+                  <mat-select placeholder="Sexo" formControlName="victim_gender_id">
+                    <mat-option *ngFor="let gender of catalogs.genders" [value]="gender.id">
+                      {{gender.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Identidad de género</mat-label>
+                  <mat-select placeholder="Identidad de género" formControlName="victim_generic_identity_id">
+                    <mat-option *ngFor="let generic_identity of catalogs.generic_identities"
+                      [value]="generic_identity.id">
+                      {{generic_identity.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <input type="text"
+                    (blur)="onBlurAutocomplete($event, formStep2, 'victim_nationality_id', 'victim_nationality_object')"
+                    placeholder="Nacionalidad" aria-label="Nacionalidad" matInput
+                    formControlName="victim_nationality_object" [matAutocomplete]="autoNatVictim">
+                  <mat-autocomplete #autoNatVictim="matAutocomplete" [displayWith]="displayFn"
+                    (optionSelected)="selectedAutocomplete($event, formStep2, 'victim_nationality_id', 'victim_nationality_observations')">
+                    <mat-option *ngFor="let option of filteredNationalities | async" [value]="option">
+                      {{option.name}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100"
+                  *ngIf="validateShowOtherAutocomplete(formStep2, 'victim_nationality_id', 'victim_nationality_observations', catalogs.nationalities)"
+                  appearance="outline">
+                  <mat-label>Especificar Nacionalidad</mat-label>
+                  <input matInput placeholder="Especificar Nacionalidad"
+                    formControlName="victim_nationality_observations" maxlength="{{maxLengthMain}}">
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Estatus migratorio</mat-label>
+                  <mat-select placeholder="Estatus migratorio" formControlName="victim_migratory_status_id">
+                    <mat-option *ngFor="let migratory of catalogs.migratory_status" [value]="migratory.id">
+                      {{migratory.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Nivel de estudios</mat-label>
+                  <mat-select placeholder="Nivel de estudios" formControlName="victim_educational_degree_id">
+                    <mat-option *ngFor="let degree of catalogs.educational_degree" [value]="degree.id">
+                      {{degree.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Etnia</mat-label>
+                <input matInput placeholder="Etnia" formControlName="victim_ethnicity" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>CURP</mat-label>
+                <input matInput placeholder="CURP" formControlName="victim_curp" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>RFC</mat-label>
+                <input matInput placeholder="RFC" formControlName="victim_rfc" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Clave de elector</mat-label>
+                <input matInput placeholder="Clave de elector" formControlName="victim_ine_ife"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div class="title-block">Empleo</div>
+
+            <div class="radio-button-container">
+              <label
+                [class.text-danger-label]="victim_occupation_option.invalid && (victim_occupation_option.dirty || victim_occupation_option.touched)"
+                class="radio-button-element">¿Actualmente contaba con algún empleo? *</label>
+              <mat-radio-group formControlName="victim_occupation_option"
+                (change)="onChangeRadio($event, formStep2,['victim_occupation_condition_id', 'victim_occupation_activity', 'victim_address_work'])">
+                <mat-radio-button class="radio-button-element" [value]="yesNoObject[0]">SI</mat-radio-button>
+                <mat-radio-button class="radio-button-element" [value]="yesNoObject[1]">NO</mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column" *ngIf="showCurrentEmployee()">
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Condición de ocupación, Empleo</mat-label>
+                  <mat-select placeholder="Condición de ocupación, Empleo"
+                    formControlName="victim_occupation_condition_id">
+                    <mat-option *ngFor="let occupation_con of catalogs.occupation_condition"
+                      [value]="occupation_con.id">
+                      {{occupation_con.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Actividad de ocupación, tipo de empleo</mat-label>
+                <input matInput placeholder="Actividad de ocupación, tipo de empleo"
+                  formControlName="victim_occupation_activity" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Dirección del lugar de trabajo</mat-label>
+                <input matInput placeholder="Dirección del lugar de trabajo" formControlName="victim_address_work"
+                  maxlength="{{maxLengthMain}}" appearance="outline">
+              </mat-form-field>
+            </div>
+
+            <div class="title-block">Domicilio Particular</div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <input type="text"
+                    (blur)="onBlurAutocomplete($event, formStep2, 'victim_federal_entity_reside_id', 'victim_federal_entity_reside_object')"
+                    placeholder="Entidad (domicilio víctima)" aria-label="Entidad (domicilio víctima)" matInput
+                    formControlName="victim_federal_entity_reside_object" [matAutocomplete]="autoEntVictim">
+                  <mat-autocomplete #autoEntVictim="matAutocomplete" [displayWith]="displayFn"
+                    (optionSelected)="selectedAutocomplete($event, formStep2, 'victim_federal_entity_reside_id', 'victim_federal_entity_reside_observations')">
+                    <mat-option *ngFor="let option of filteredEntities | async" [value]="option">
+                      {{option.name}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100"
+                  *ngIf="validateShowOtherAutocomplete(formStep2, 'victim_federal_entity_reside_id', 'victim_federal_entity_reside_observations', catalogs.federal_entities)"
+                  appearance="outline">
+                  <mat-label>Especificar Entidad (domicilio víctima)</mat-label>
+                  <input matInput placeholder="Especificar Entidad (domicilio víctima)"
+                    formControlName="victim_federal_entity_reside_observations" maxlength="{{maxLengthMain}}">
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <input type="text"
+                    (blur)="onBlurAutocomplete($event, formStep2, 'victim_municipality_reside_id', 'victim_municipality_reside_object')"
+                    placeholder="Municipio (domicilio víctima)" aria-label="Municipio (domicilio víctima)" matInput
+                    formControlName="victim_municipality_reside_object" [matAutocomplete]="autoMunVictim">
+                  <mat-autocomplete #autoMunVictim="matAutocomplete" [displayWith]="displayFn"
+                    (optionSelected)="selectedAutocomplete($event, formStep2, 'victim_municipality_reside_id', 'victim_municipality_reside_observations')">
+                    <mat-option *ngFor="let option of filteredMunicipalities | async" [value]="option">
+                      {{option.name}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100"
+                  *ngIf="validateShowOtherAutocomplete(formStep2, 'victim_municipality_reside_id', 'victim_municipality_reside_observations', catalogs.municipalities)"
+                  appearance="outline">
+                  <mat-label>Especificar Municipio (domicilio víctima)</mat-label>
+                  <input matInput placeholder="Especificar Municipio (domicilio víctima)"
+                    formControlName="victim_municipality_reside_observations" maxlength="{{maxLengthMain}}">
+                </mat-form-field>
+              </div>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Localidad (domicilio víctima)</mat-label>
+                <input matInput placeholder="Localidad (domicilio víctima)" formControlName="victim_locality_reside"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Colonia (domicilio víctima)</mat-label>
+                <input matInput placeholder="Colonia (domicilio víctima)" formControlName="victim_colony_reside"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Calle (domicilio víctima)</mat-label>
+                <input matInput placeholder="Calle (domicilio víctima)" formControlName="victim_street_reside"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Número exterior (domicilio víctima)</mat-label>
+                <input matInput placeholder="Número exterior (domicilio víctima)"
+                  formControlName="victim_exterior_number_reside" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Número interior (domicilio víctima)</mat-label>
+                <input matInput placeholder="Número interior (domicilio víctima)"
+                  formControlName="victim_interior_number_reside" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Domicilio particular</mat-label>
+                <input matInput placeholder="Domicilio particular" [readonly]="true" [value]="getVictimFullAddress()"
+                  required>
+              </mat-form-field>
+            </div>
+
+            <div class="title-block">
+              <h3>MEDIA FILIACIÓN Y PARTICULARIDADES</h3>
+              Vestimenta usada el último día del avistamiento
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>A. Prenda de vestir (Superior externa)</mat-label>
+                <input matInput placeholder="A. Prenda de vestir (Superior externa)"
+                  formControlName="victim_exterior_upper_clothe" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>B. Prenda de vestir (Inferior externa)</mat-label>
+                <input matInput placeholder="B. Prenda de vestir (Inferior externa)"
+                  formControlName="victim_exterior_lower_clothe" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>C. Prenda de vestir (Superior interna)</mat-label>
+                <input matInput placeholder="C. Prenda de vestir (Superior interna)"
+                  formControlName="victim_interior_upper_clothe" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>D. Prenda de vestir (Inferior interna)</mat-label>
+                <input matInput placeholder="D. Prenda de vestir (Inferior interna)"
+                  formControlName="victim_interior_lower_clothe" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>E. Calzado</mat-label>
+                <input matInput placeholder="E. Calzado" formControlName="victim_shoes" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>F. Accesorios</mat-label>
+                <input matInput placeholder="F. Accesorios" formControlName="victim_accesories"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div class="title-block">Descripción morfológica</div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Complexión</mat-label>
+                  <mat-select placeholder="D.M. Complexión" formControlName="victim_complexion_id">
+                    <mat-option *ngFor="let complexion of catalogs.complexions" [value]="complexion.id">
+                      {{complexion.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_complexion_id', 'victim_complexion_observations', catalogs.complexions)">
+                  <mat-label>Especificar D.M. Complexión</mat-label>
+                  <input matInput placeholder="Especificar D.M. Complexión"
+                    formControlName="victim_complexion_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>D.M. Peso</mat-label>
+                <input matInput placeholder="D.M. Peso" currencyMask [options]="{align: 'right'}"
+                  formControlName="victim_mf_weight" maxlength="{{maxLengthWeight}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>D.M. Estatura</mat-label>
+                <input matInput placeholder="D.M. Estatura" currencyMask [options]="{align: 'right'}"
+                  formControlName="victim_mf_height" maxlength="{{maxLengthWeight}}">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Forma de la Cara</mat-label>
+                  <mat-select placeholder="D.M. Forma de la Cara" formControlName="victim_mf_shape_face_id">
+                    <mat-option *ngFor="let shape_face of catalogs.shapes_face" [value]="shape_face.id">
+                      {{shape_face.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_mf_shape_face_id', 'victim_mf_shape_face_observations', catalogs.shapes_face)">
+                  <mat-label>Especificar D.M. Forma de la Cara</mat-label>
+                  <input matInput placeholder="Especificar D.M. Forma de la Cara"
+                    formControlName="victim_mf_shape_face_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Ojos (color)</mat-label>
+                  <mat-select placeholder="D.M. Ojos (color)" formControlName="victim_eyes_color_id">
+                    <mat-option *ngFor="let eyes_color of catalogs.eyes_colors" [value]="eyes_color.id">
+                      {{eyes_color.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_eyes_color_id', 'victim_eyes_color_observations', catalogs.eyes_colors)">
+                  <mat-label>Especificar D.M. Ojos (color)</mat-label>
+                  <input matInput placeholder="Especificar D.M. Ojos (color)"
+                    formControlName="victim_eyes_color_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Tipo de Ojos</mat-label>
+                  <mat-select placeholder="D.M. Tipo de Ojos" formControlName="victim_eyes_type_id">
+                    <mat-option *ngFor="let eyes_type of catalogs.eyes_types" [value]="eyes_type.id">
+                      {{eyes_type.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_eyes_type_id', 'victim_eyes_type_observations', catalogs.eyes_types)">
+                  <mat-label>Especificar D.M. Tipo de Ojos</mat-label>
+                  <input matInput placeholder="Especificar D.M. Tipo de Ojos"
+                    formControlName="victim_eyes_type_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Tez</mat-label>
+                  <mat-select placeholder="D.M. Tez" formControlName="victim_skin_id">
+                    <mat-option *ngFor="let skin of catalogs.skins" [value]="skin.id">
+                      {{skin.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_skin_id', 'victim_skin_observations', catalogs.skins)">
+                  <mat-label>Especificar D.M. Tez</mat-label>
+                  <input matInput placeholder="Especificar D.M. Tez" formControlName="victim_skin_observations"
+                    maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Cabello (forma)</mat-label>
+                  <mat-select placeholder="D.M. Cabello (forma)" formControlName="victim_hair_shape_id">
+                    <mat-option *ngFor="let hair_shape of catalogs.hair_shapes" [value]="hair_shape.id">
+                      {{hair_shape.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_hair_shape_id', 'victim_hair_shape_observations', catalogs.hair_shapes)">
+                  <mat-label>Especificar D.M. Cabello (forma)</mat-label>
+                  <input matInput placeholder="Especificar D.M. Cabello (forma)"
+                    formControlName="victim_hair_shape_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Cabello (largo)</mat-label>
+                  <mat-select placeholder="D.M. Cabello (largo)" formControlName="victim_hair_size_id">
+                    <mat-option *ngFor="let hair_size of catalogs.hair_sizes" [value]="hair_size.id">
+                      {{hair_size.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_hair_size_id', 'victim_hair_size_observations', catalogs.hair_sizes)">
+                  <mat-label>Especificar D.M. Cabello (largo)</mat-label>
+                  <input matInput placeholder="Especificar D.M. Cabello (largo)"
+                    formControlName="victim_hair_size_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>D.M. Cabello (color)</mat-label>
+                <input matInput placeholder="D.M. Cabello (color)" formControlName="victim_hair_color"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Orejas (tamaño y forma)</mat-label>
+                  <mat-select placeholder="D.M. Orejas (tamaño y forma)" formControlName="victim_ears_shape_id">
+                    <mat-option *ngFor="let ears_shape of catalogs.ears_shapes" [value]="ears_shape.id">
+                      {{ears_shape.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_ears_shape_id', 'victim_ears_shape_observations', catalogs.ears_shapes)">
+                  <mat-label>Espedificar D.M. Orejas (tamaño y forma)</mat-label>
+                  <input matInput placeholder="Espedificar D.M. Orejas (tamaño y forma)"
+                    formControlName="victim_ears_shape_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Mentón (forma)</mat-label>
+                  <mat-select placeholder="D.M. Mentón (forma)" formControlName="victim_chin_shape_id">
+                    <mat-option *ngFor="let chin_shape of catalogs.chin_shapes" [value]="chin_shape.id">
+                      {{chin_shape.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_chin_shape_id', 'victim_chin_shape_observations', catalogs.chin_shapes)">
+                  <mat-label>Especificar D.M. Mentón (forma)</mat-label>
+                  <input matInput placeholder="Especificar D.M. Mentón (forma)"
+                    formControlName="victim_chin_shape_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Nariz (tamaño)</mat-label>
+                  <mat-select placeholder="D.M. Nariz (tamaño)" formControlName="victim_nose_size_id">
+                    <mat-option *ngFor="let nose_size of catalogs.nose_sizes" [value]="nose_size.id">
+                      {{nose_size.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_nose_size_id', 'victim_nose_size_observations', catalogs.nose_sizes)">
+                  <mat-label>Especificar D.M. Nariz (tamaño)</mat-label>
+                  <input matInput placeholder="Especificar D.M. Nariz (tamaño)"
+                    formControlName="victim_nose_size_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Nariz (tipo)</mat-label>
+                  <mat-select placeholder="D.M. Nariz (tipo)" formControlName="victim_nose_type_id">
+                    <mat-option *ngFor="let nose_type of catalogs.nose_types" [value]="nose_type.id">
+                      {{nose_type.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_nose_type_id', 'victim_nose_type_observations', catalogs.nose_types)">
+                  <mat-label>Especificar D.M. Nariz (tipo)</mat-label>
+                  <input matInput placeholder="Especificar D.M. Nariz (tipo)"
+                    formControlName="victim_nose_type_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Frente</mat-label>
+                  <mat-select placeholder="D.M. Frente" formControlName="victim_front_shape_id">
+                    <mat-option *ngFor="let front_shape of catalogs.front_shapes" [value]="front_shape.id">
+                      {{front_shape.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_front_shape_id', 'victim_front_shape_observations', catalogs.front_shapes)">
+                  <mat-label>Especificar D.M. Frente</mat-label>
+                  <input matInput placeholder="Especificar D.M. Frente"
+                    formControlName="victim_front_shape_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Cejas (forma)</mat-label>
+                  <mat-select placeholder="D.M. Cejas (forma)" formControlName="victim_eyebrows_shape_id">
+                    <mat-option *ngFor="let eyebrows_shape of catalogs.eyebrows_shapes" [value]="eyebrows_shape.id">
+                      {{eyebrows_shape.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_eyebrows_shape_id', 'victim_eyebrows_shape_observations', catalogs.eyebrows_shapes)">
+                  <mat-label>Especificar D.M. Cejas (forma)</mat-label>
+                  <input matInput placeholder="Especificar D.M. Cejas (forma)"
+                    formControlName="victim_eyebrows_shape_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>D.M. Cejas (caracteristicas)</mat-label>
+                <input matInput placeholder="D.M. Cejas (caracteristicas)" formControlName="victim_eyebrows_features"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Boca (tamaño)</mat-label>
+                  <mat-select placeholder="D.M. Boca (tamaño)" formControlName="victim_mouth_size_id">
+                    <mat-option *ngFor="let mouth_size of catalogs.mouth_sizes" [value]="mouth_size.id">
+                      {{mouth_size.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_mouth_size_id', 'victim_mouth_size_observations', catalogs.mouth_sizes)">
+                  <mat-label>Especificar D.M. Boca (tamaño)</mat-label>
+                  <input matInput placeholder="Especificar D.M. Boca (tamaño)"
+                    formControlName="victim_mouth_size_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Labios (grosor)</mat-label>
+                  <mat-select placeholder="D.M. Labios (grosor)" formControlName="victim_lips_thickness_id">
+                    <mat-option *ngFor="let lip_thickness of catalogs.lips_thickness" [value]="lip_thickness.id">
+                      {{lip_thickness.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_lips_thickness_id', 'victim_lips_thickness_observations', catalogs.lips_thickness)">
+                  <mat-label>Especificar D.M. Labios (grosor)</mat-label>
+                  <input matInput placeholder="Especificar D.M. Labios (grosor)"
+                    formControlName="victim_lips_thickness_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Barba (caraterísticas)</mat-label>
+                  <mat-select placeholder="D.M. Barba (caraterísticas)" formControlName="victim_beard_feature_id">
+                    <mat-option *ngFor="let beard_feature of catalogs.beard_features" [value]="beard_feature.id">
+                      {{beard_feature.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_beard_feature_id', 'victim_beard_feature_observations', catalogs.beard_features)">
+                  <mat-label>Especificar D.M. Barba (caraterísticas)</mat-label>
+                  <input matInput placeholder="Especificar D.M. Barba (caraterísticas)"
+                    formControlName="victim_beard_feature_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>D.M. Bigote (forma)</mat-label>
+                  <mat-select placeholder="D.M. Bigote (forma)" formControlName="victim_moustache_shape_id">
+                    <mat-option *ngFor="let moustache_shape of catalogs.moustache_shapes" [value]="moustache_shape.id">
+                      {{moustache_shape.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep2, 'victim_moustache_shape_id', 'victim_moustache_shape_observations', catalogs.moustache_shapes)">
+                  <mat-label>Especificar D.M. Bigote (forma)</mat-label>
+                  <input matInput placeholder="Especificar D.M. Bigote (forma)"
+                    formControlName="victim_moustache_shape_observations" maxlength="{{maxLengthMain}}" required>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlex="33" class="column">
+                <div formArrayName="victim_denture_particularities"
+                  *ngFor="let denture of formStep2.controls['victim_denture_particularities'].controls; let i = index;">
+                  <mat-form-field [formGroupName]="i" appearance="outline" fxFlex="100">
+                    <mat-label>D.M. Dentadura (particularidades)</mat-label>
+                    <input matInput placeholder="D.M. Dentadura (particularidades)" formControlName="description"
+                      maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+                  <button mat-flat-button color="warn" fxFlex="10" class="delete-field"
+                    (click)="onDeleteFormGroup(i, formStep2, 'victim_denture_particularities')"
+                    [disabled]="editing && !activeEdit"><i class="material-icons">delete</i></button>
+                </div>
+                <div>
+                  <button mat-flat-button color="primary" class="add-field" fxFlex="100"
+                    (click)="onAddFormGroup(victim_denture_particularities, formStep2, 'victim_denture_particularities', 'denture')"
+                    type="button" [disabled]="editing && !activeEdit"><i class="material-icons">add_circle</i> D.M.
+                    Dentadura (particularidades)</button>
+                </div>
+              </div>
+
+              <div fxFlex="33" class="column">
+                <div formArrayName="victim_surgical_operations"
+                  *ngFor="let surgical_operation of formStep2.controls['victim_surgical_operations'].controls; let i = index;">
+                  <mat-form-field [formGroupName]="i" appearance="outline" fxFlex="100">
+                    <mat-label>D.M. Operaciones quirúrgicas</mat-label>
+                    <input matInput placeholder="D.M. Operaciones quirúrgicas" formControlName="description"
+                      maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+                  <button mat-flat-button color="warn" fxFlex="10" class="delete-field"
+                    (click)="onDeleteFormGroup(i, formStep2, 'victim_surgical_operations')"
+                    [disabled]="editing && !activeEdit"><i class="material-icons">delete</i></button>
+                </div>
+                <div>
+                  <button mat-flat-button color="primary" class="add-field" fxFlex="100"
+                    (click)="onAddFormGroup(victim_surgical_operations, formStep2, 'victim_surgical_operations', 'surgical_operation')"
+                    type="button" [disabled]="editing && !activeEdit"><i class="material-icons">add_circle</i> D.M.
+                    Operaciones quirúrgicas</button>
+                </div>
+              </div>
+
+              <div fxFlex="33" class="column">
+                <div formArrayName="victim_fractures"
+                  *ngFor="let fracture of formStep2.controls['victim_fractures'].controls; let i = index;">
+                  <mat-form-field [formGroupName]="i" appearance="outline" fxFlex="100">
+                    <mat-label>D.M. Fracturas</mat-label>
+                    <input matInput placeholder="D.M. Fracturas" formControlName="description"
+                      maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+                  <button mat-flat-button color="warn" fxFlex="10" class="delete-field"
+                    (click)="onDeleteFormGroup(i, formStep2, 'victim_fractures')" [disabled]="editing && !activeEdit"><i
+                      class="material-icons">delete</i></button>
+                </div>
+                <div>
+                  <button mat-flat-button color="primary" class="add-field" fxFlex="100"
+                    (click)="onAddFormGroup(victim_fractures, formStep2, 'victim_fractures', 'fracture')" type="button"
+                    [disabled]="editing && !activeEdit"><i class="material-icons">add_circle</i> D.M. Fracturas</button>
+                </div>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlex="33" class="column">
+                <div formArrayName="victim_particular_signs"
+                  *ngFor="let particular_sign of formStep2.controls['victim_particular_signs'].controls; let i = index;">
+                  <mat-form-field [formGroupName]="i" appearance="outline" fxFlex="100">
+                    <mat-label>Señas particulares</mat-label>
+                    <input matInput placeholder="Señas particulares" formControlName="description"
+                      maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+                  <button mat-flat-button color="warn" fxFlex="10" class="delete-field"
+                    (click)="onDeleteFormGroup(i, formStep2, 'victim_particular_signs')"
+                    [disabled]="editing && !activeEdit"><i class="material-icons">delete</i></button>
+                </div>
+                <div>
+                  <button mat-flat-button color="primary" class="add-field" fxFlex="100"
+                    (click)="onAddFormGroup(victim_particular_signs, formStep2, 'victim_particular_signs', 'particular_sign')"
+                    type="button" [disabled]="editing && !activeEdit"><i class="material-icons">add_circle</i> Señas
+                    particulares</button>
+                </div>
+              </div>
+
+              <div fxFlex="33" class="column">
+                <div formArrayName="victim_tattoos"
+                  *ngFor="let tattoo of formStep2.controls['victim_tattoos'].controls; let i = index;">
+                  <mat-form-field [formGroupName]="i" appearance="outline" fxFlex="100">
+                    <mat-label>Tatuajes</mat-label>
+                    <input matInput placeholder="Tatuajes" formControlName="description" maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+                  <button mat-flat-button color="warn" fxFlex="10" class="delete-field"
+                    (click)="onDeleteFormGroup(i, formStep2, 'victim_tattoos')" [disabled]="editing && !activeEdit"><i
+                      class="material-icons">delete</i></button>
+                </div>
+                <div>
+                  <button mat-flat-button color="primary" class="add-field" fxFlex="100"
+                    (click)="onAddFormGroup(victim_tattoos, formStep2, 'victim_tattoos', 'tattoo')" type="button"
+                    [disabled]="editing && !activeEdit"><i class="material-icons">add_circle</i> Tatuajes</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="title-block">Último avistamiento (Tiempo)</div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Fecha de vista última vez</mat-label>
+                <input matInput (dateChange)="setDateForm2($event, 'fact_last_date_saw')"
+                  [value]="getDateValue(formStep2, 'fact_last_date_saw')"
+                  (dateInput)="setDateForm2($event, 'fact_last_date_saw')" [matDatepicker]="dateLastDay"
+                  placeholder="Fecha de vista última vez*" disabled required [max]="maxDate">
+                <mat-datepicker-toggle matSuffix [for]="dateLastDay"></mat-datepicker-toggle>
+                <mat-datepicker #dateLastDay [disabled]="editing && !activeEdit"></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Hora vista última vez</mat-label>
+                <input matInput placeholder="Hora vista última vez" formControlName="fact_last_hour_saw"
+                  maxlength="{{maxLengthMain}}" [textMask]="{mask: maskTime}">
+              </mat-form-field>
+            </div>
+
+            <div class="title-block">Último avistamiento (Lugar)</div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Lugar visto última vez</mat-label>
+                <input matInput placeholder="Lugar visto última vez" formControlName="place_of_last_sighting"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <input type="text"
+                    (blur)="onBlurAutocomplete($event, formStep2, 'last_sighting_country_id', 'last_sighting_country_object')"
+                    placeholder="País del último avistamiento" aria-label="País del último avistamiento" matInput
+                    formControlName="last_sighting_country_object" [matAutocomplete]="autoNatSighting">
+                  <mat-autocomplete #autoNatSighting="matAutocomplete" [displayWith]="displayFn"
+                    (optionSelected)="selectedAutocomplete($event, formStep2, 'last_sighting_country_id', 'last_sighting_country_observations')">
+                    <mat-option *ngFor="let option of filteredNationalitiesSighting | async" [value]="option">
+                      {{option.name}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100"
+                  *ngIf="validateShowOtherAutocomplete(formStep2, 'last_sighting_country_id', 'last_sighting_country_observations', catalogs.countries)"
+                  appearance="outline">
+                  <mat-label>Especificar País del último avistamiento</mat-label>
+                  <input matInput placeholder="Especificar País del último avistamiento"
+                    formControlName="last_sighting_country_observations" maxlength="{{maxLengthMain}}">
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <input type="text"
+                    (blur)="onBlurAutocomplete($event, formStep2, 'last_sighting_federal_entity_id', 'last_sighting_federal_entity_object')"
+                    placeholder="Entidad del último avistamiento" aria-label="Entidad del último avistamiento" matInput
+                    formControlName="last_sighting_federal_entity_object" [matAutocomplete]="autoEntSighting">
+                  <mat-autocomplete #autoEntSighting="matAutocomplete" [displayWith]="displayFn"
+                    (optionSelected)="selectedAutocomplete($event, formStep2, 'last_sighting_federal_entity_id', 'last_sighting_federal_entity_observations')">
+                    <mat-option *ngFor="let option of filteredEntitiesSighting | async" [value]="option">
+                      {{option.name}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100"
+                  *ngIf="validateShowOtherAutocomplete(formStep2, 'last_sighting_federal_entity_id', 'last_sighting_federal_entity_observations', catalogs.federal_entities)"
+                  appearance="outline">
+                  <mat-label>Especificar Entidad del último avistamiento</mat-label>
+                  <input matInput placeholder="Especificar Entidad del último avistamiento"
+                    formControlName="last_sighting_federal_entity_observations" maxlength="{{maxLengthMain}}">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <input type="text"
+                    (blur)="onBlurAutocomplete($event, formStep2, 'last_sighting_municipality_id', 'last_sighting_municipality_object')"
+                    placeholder="Municipio del último avistamiento" aria-label="Municipio del último avistamiento"
+                    matInput formControlName="last_sighting_municipality_object" [matAutocomplete]="autoMunSighting">
+                  <mat-autocomplete #autoMunSighting="matAutocomplete" [displayWith]="displayFn"
+                    (optionSelected)="selectedAutocomplete($event, formStep2, 'last_sighting_municipality_id', 'last_sighting_municipality_observations')">
+                    <mat-option *ngFor="let option of filteredMunicipalitiesSighting | async" [value]="option">
+                      {{option.name}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100"
+                  *ngIf="validateShowOtherAutocomplete(formStep2, 'last_sighting_municipality_id', 'last_sighting_municipality_observations', catalogs.municipalities)"
+                  appearance="outline">
+                  <mat-label>Especificar Municipio del último avistamiento</mat-label>
+                  <input matInput placeholder="Especificar Municipio del último avistamiento"
+                    formControlName="last_sighting_municipality_observations" maxlength="{{maxLengthMain}}">
+                </mat-form-field>
+              </div>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Localidad del último avistamiento</mat-label>
+                <input matInput placeholder="Localidad del último avistamiento" formControlName="last_sighting_locality"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Colonia del último avistamiento</mat-label>
+                <input matInput placeholder="Colonia del último avistamiento" formControlName="last_sighting_colony"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Calle del último avistamiento</mat-label>
+                <input matInput placeholder="Calle del último avistamiento" formControlName="last_sighting_street"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Domicilio de último avistamiento</mat-label>
+                <input matInput placeholder="Domicilio de último avistamiento" [readonly]="true"
+                  [value]="getVictimLastSightningFullAddress()">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Cruce de calles del último avistamiento</mat-label>
+                <input matInput placeholder="Cruce de calles del último avistamiento"
+                  formControlName="last_sighting_street_across" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div class="title-block">Último aAvistamiento narración (Modo)</div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="99" appearance="outline">
+                <mat-label>Descripción de los hechos del último avistamiento</mat-label>
+                <textarea matInput md-no-autogrow placeholder="Descripción de los hechos del último avistamiento"
+                  formControlName="rapporteurship_of_the_fact"></textarea>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Pasatiempos</mat-label>
+                <textarea matInput md-no-autogrow placeholder="Pasatiempos" formControlName="victim_hobbies"></textarea>
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Historia clínica</mat-label>
+                <textarea matInput md-no-autogrow placeholder="Historia clínica"
+                  formControlName="victim_clinic_history"></textarea>
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Historia dental</mat-label>
+                <textarea matInput md-no-autogrow placeholder="Historia dental"
+                  formControlName="victim_dental_history"></textarea>
+              </mat-form-field>
+            </div>
+
+            <div class="title-block">ADN</div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Personas para donar muestras</mat-label>
+                <input matInput placeholder="Personas para donar muestras" formControlName="victim_people_donate_dna"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Muestras en banco</mat-label>
+                <input matInput placeholder="Muestras en banco" formControlName="victim_dna_bank"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Existencia de muestras</mat-label>
+                <input matInput placeholder="Existencia de muestras" formControlName="victim_dna_existency"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div class="title-block">Foto</div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" style="padding-left: 16px;">
+              <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                <button class="addFile" mat-raised-button color="accent" (click)="addFiles()"
+                  [disabled]="editing && !activeEdit">Agregar Fotografía</button>
+                <mat-list>
+                  <h3 mat-subheader>Archivos</h3>
+                  <div class="content-list-file">
+
+                    <mat-list-item *ngFor="let file of files; let index = index;">
+                      <mat-icon mat-list-icon class="iconFile">description</mat-icon>
+                      <h4 mat-line>
+                        <label class="title">{{file.name}}</label>
+                        <mat-icon mat-list-icon class="removeMedia" *ngIf="showDelete()"
+                          (click)="removeMedia(null, index)">delete</mat-icon>
+                      </h4>
+                      <mat-progress-bar *ngIf="progress" mode="determinate"
+                        [value]="progress[file.name].progress | async"></mat-progress-bar>
+                    </mat-list-item>
+
+                    <mat-list-item *ngFor="let file_media of getMedia(); let index = index">
+                      <mat-icon mat-list-icon class="iconFile">description</mat-icon>
+                      <h4 mat-line>
+                        <a target="_blank" [href]="urlAPI + file_media.name"
+                          class="title">{{file_media.original_name}}</a>
+                        <!--<mat-icon mat-list-icon class="removeMedia" *ngIf="showDelete()"
+                          (click)="removeMedia(file_media.id, index)">delete</mat-icon>-->
+                      </h4>
+                    </mat-list-item>
+                  </div>
+                </mat-list>
+
+                <input type="file" #file style="display: none;" (change)="onFilesAdded()" multiple>
+              </div>
+            </div>
+
+            <div class="title-block">Medios electrónicos</div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Teléfono</mat-label>
+                <input matInput placeholder="Teléfono" formControlName="victim_phone" maxlength="{{maxLengthMain}}"
+                  [textMask]="{mask: mask}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Redes sociales</mat-label>
+                <input matInput placeholder="Redes sociales" formControlName="victim_social_networks"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+          </form>
+        </mat-tab>
+
+        <!--STEP 2------------------------------------------------------------------------------------------------------------------------------------>
+
+        <mat-tab label="Vehículos participantes" [disabled]="checkDisabledTab(1)">
+          <form fxLayout="column" [formGroup]="formStep3" autocomplete="off">
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div class="title-block first" fxFlex="99" fxLayout.lt-md="column">
+                <label class="title" fxFlex="34">Vehículo que conducía la víctima</label>
+                <label *ngIf="editing && dataEdit" fxFlex="14" class="id">ID: {{dataEdit.id}}</label>
+                <label *ngIf="editing && dataEdit" fxFlex="26" class="date">Fecha: {{created_date}}</label>
+                <label *ngIf="hasEditPermissions" class="edit" fxFlex="24">
+                  <button *ngIf="editing" (click)="activateEditMethod()" class="edit-button" mat-raised-button
+                    color="accent">{{!activeEdit ? 'Editar' : 'Cancelar edición'}} <img [src]="getImageEdit()"></button>
+                </label>
+              </div>
+            </div>
+
+            <div class="radio-button-container">
+              <label class="radio-button-element"
+                [class.text-danger-label]="fact_vehiculo_victim.invalid && (fact_vehiculo_victim.dirty || fact_vehiculo_victim.touched)">¿La
+                víctima tenía algún vehículo? *</label>
+              <mat-radio-group formControlName="fact_vehiculo_victim"
+                (change)="onChangeRadio($event, formStep3, ['fact_vehiculo_plate', 'fact_vehiculo_brand', 'fact_vehiculo_sub_brand', 'fact_vehiculo_model', 'fact_vehiculo_color'])">
+                <mat-radio-button class="radio-button-element" [value]="yesNoObject[0]">SI</mat-radio-button>
+                <mat-radio-button class="radio-button-element" [value]="yesNoObject[1]">NO</mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column" *ngIf="showVehicle()">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>V_V_Placas</mat-label>
+                <input matInput placeholder="V_V_Placas" formControlName="fact_vehiculo_plate"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>V_V_Marca</mat-label>
+                <input matInput placeholder="V_V_Marca" formControlName="fact_vehiculo_brand"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>V_V_Submarca</mat-label>
+                <input matInput placeholder="V_V_Submarca" formControlName="fact_vehiculo_sub_brand"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column" *ngIf="showVehicle()">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>V_V_Modelo</mat-label>
+                <input matInput placeholder="V_V_Modelo" formControlName="fact_vehiculo_model"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>V_V_Color</mat-label>
+                <input matInput placeholder="V_V_Color" formControlName="fact_vehiculo_color"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div class="title-block">Vehículos de los implicados o sospechosos</div>
+
+            <div class="radio-button-container">
+              <label
+                [class.text-danger-label]="suspicious_vehicles.invalid && (suspicious_vehicles.dirty || suspicious_vehicles.touched)"
+                class="radio-button-element">¿Se cuenta con datos de algún vehículo sospechoso? *</label>
+              <mat-radio-group formControlName="suspicious_vehicles"
+                (change)="onChangeRadioDinamic($event, formStep3, 'suspicious_vehicles_list', ['brand', 'sub_brand', 'model', 'color', 'plate'])">
+                <mat-radio-button class="radio-button-element" [value]="yesNoObject[0]">SI</mat-radio-button>
+                <mat-radio-button class="radio-button-element" [value]="yesNoObject[1]">NO</mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <span *ngIf="showVehicleSuspicious()">
+              <div fxLayout="column" formArrayName="suspicious_vehicles_list"
+                *ngFor="let vehicle of formStep3.controls['suspicious_vehicles_list'].controls; let i = index;"
+                style="border-bottom: 1px solid #eee; margin-bottom: 30px;">
+                <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+                  <mat-form-field [formGroupName]="i" fxFlex="33" appearance="outline">
+                    <mat-label>V_SOS_Marca</mat-label>
+                    <input matInput placeholder="V_SOS_Marca" formControlName="brand" maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+
+                  <mat-form-field [formGroupName]="i" fxFlex="33" appearance="outline">
+                    <mat-label>V_SOS_Submarca</mat-label>
+                    <input matInput placeholder="V_SOS_Submarca" formControlName="sub_brand"
+                      maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+
+                  <mat-form-field [formGroupName]="i" fxFlex="33" appearance="outline">
+                    <mat-label>V_SOS_Modelo</mat-label>
+                    <input matInput placeholder="V_SOS_Modelo" formControlName="model" maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+                </div>
+
+                <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+
+                  <mat-form-field [formGroupName]="i" fxFlex="33" appearance="outline">
+                    <mat-label>V_SOS_Color</mat-label>
+                    <input matInput placeholder="V_SOS_Color" formControlName="color" maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+
+                  <mat-form-field [formGroupName]="i" fxFlex="33" appearance="outline">
+                    <mat-label>V_SOS_Placas</mat-label>
+                    <input matInput placeholder="V_SOS_Placas" formControlName="plate" maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+
+                  <div fxFlex="100">
+                    <button mat-flat-button color="warn" class="delete-field"
+                      style="margin-left: 15px; margin-bottom: 15px;"
+                      (click)="onDeleteFormGroup(i, formStep3, 'suspicious_vehicles_list')" type="button"
+                      [disabled]="editing && !activeEdit"><i class="material-icons">delete</i> Eliminar
+                      vehículo</button>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div fxFlex="100">
+                  <button mat-flat-button color="primary" class="add-field"
+                    (click)="onAddFormGroup(suspicious_vehicles_list, formStep3, 'suspicious_vehicles_list', 'suspicious_vehicle')"
+                    type="button" [disabled]="editing && !activeEdit"><i class="material-icons">add_circle</i> Agregar
+                    vehículo</button>
+                </div>
+              </div>
+            </span>
+
+          </form>
+        </mat-tab>
+
+        <!--STEP 3------------------------------------------------------------------------------------------------------------------------------------>
+
+        <mat-tab label="Persona denunciante" [disabled]="checkDisabledTab(2)">
+          <form fxLayout="column" [formGroup]="formStep4" autocomplete="off">
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div class="title-block first" fxFlex="99" fxLayout.lt-md="column">
+                <label class="title" fxFlex="34">Denunciante</label>
+                <label *ngIf="editing && dataEdit" fxFlex="14" class="id">ID: {{dataEdit.id}}</label>
+                <label *ngIf="editing && dataEdit" fxFlex="26" class="date">Fecha: {{created_date}}</label>
+                <label *ngIf="hasEditPermissions" class="edit" fxFlex="24">
+                  <button *ngIf="editing" (click)="activateEditMethod()" class="edit-button" mat-raised-button
+                    color="accent">{{!activeEdit ? 'Editar' : 'Cancelar edición'}} <img [src]="getImageEdit()"></button>
+                </label>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Nombre</mat-label>
+                <input matInput placeholder="Nombre" formControlName="informer_name" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Apellido paterno</mat-label>
+                <input matInput placeholder="Apellido paterno" formControlName="informer_lastname"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Apellido materno</mat-label>
+                <input matInput placeholder="Apellido materno" formControlName="informer_mothers_lastname"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Nombre completo</mat-label>
+                <input matInput placeholder="Nombre completo" [readonly]="true" [value]="getInformerFullName()">
+              </mat-form-field>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Sexo</mat-label>
+                  <mat-select placeholder="Sexo" formControlName="informer_gender_id">
+                    <mat-option *ngFor="let gender of catalogs.genders" [value]="gender.id">
+                      {{gender.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <mat-form-field fxFlex="33" appearance="outline"
+                [ngClass]="{'error-required': formStep4.get('informer_birthdate').invalid && formStep4.get('informer_birthdate').touched, 'mat-form-field-invalid': formStep4.get('informer_birthdate').invalid && formStep4.get('informer_birthdate').touched}">
+                <mat-label>Fecha de nacimiento</mat-label>
+                <input matInput (dateChange)="setDateForm4($event, 'informer_birthdate')"
+                  [value]="getDateValue(formStep4, 'informer_birthdate')"
+                  (dateInput)="setDateForm4($event, 'informer_birthdate')" [matDatepicker]="dateBirthInfor"
+                  placeholder="Fecha de nacimiento*" disabled [max]="maxDate">
+                <mat-datepicker-toggle matSuffix [for]="dateBirthInfor"></mat-datepicker-toggle>
+                <mat-datepicker #dateBirthInfor [disabled]="editing && !activeEdit"></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Edad</mat-label>
+                <input type="text" matInput placeholder="Edad" formControlName="informer_years" [readonly]="true">
+              </mat-form-field>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Parentesco de la persona denunciante con la víctima</mat-label>
+                  <mat-select placeholder="Parentesco de la persona denunciante con la víctima"
+                    formControlName="informer_kinship_id">
+                    <mat-option *ngFor="let kinship of catalogs.kinships" [value]="kinship.id">
+                      {{kinship.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>CURP</mat-label>
+                <input matInput placeholder="CURP" formControlName="informer_curp" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>RFC</mat-label>
+                <input matInput placeholder="RFC" formControlName="informer_rfc" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>IFE</mat-label>
+                <input matInput placeholder="IFE" formControlName="informer_ine_ife" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div class="title-block">Domicilio de la persona denunciante</div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Entidad (Domicilio denunciante)</mat-label>
+                  <mat-select placeholder="Entidad (Domicilio denunciante)"
+                    formControlName="informer_resident_federal_entity_id">
+                    <mat-option *ngFor="let federal_entity of catalogs.federal_entities" [value]="federal_entity.id">
+                      {{federal_entity.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep4, 'informer_resident_federal_entity_id', 'informer_resident_federal_entity_observations', catalogs.federal_entities)">
+                  <mat-label>Especificar Entidad (Domicilio denunciante)</mat-label>
+                  <input matInput placeholder="Especificar Entidad (Domicilio denunciante)"
+                    formControlName="informer_resident_federal_entity_observations" maxlength="{{maxLengthMain}}">
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Municipio de residencia</mat-label>
+                  <mat-select placeholder="Municipio de residencia" formControlName="informer_resident_municipality_id">
+                    <mat-option *ngFor="let municipality of catalogs.municipalities" [value]="municipality.id">
+                      {{municipality.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="100" appearance="outline"
+                  *ngIf="validateShowOtherField(formStep4, 'informer_resident_municipality_id', 'informer_resident_municipality_observations', catalogs.municipalities)">
+                  <mat-label>Especificar Municipio de residencia</mat-label>
+                  <input matInput placeholder="Especificar Municipio de residencia"
+                    formControlName="informer_resident_municipality_observations" maxlength="{{maxLengthMain}}"
+                    required>
+                </mat-form-field>
+              </div>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Localidad de residencia</mat-label>
+                <input matInput placeholder="Localidad  de residencia" formControlName="informer_resident_locality"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Colonia de residencia</mat-label>
+                <input matInput placeholder="Colonia de residencia" formControlName="informer_resident_colony"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Calle de residencia</mat-label>
+                <input matInput placeholder="Calle de residencia" formControlName="informer_resident_street"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Número exterior residencia</mat-label>
+                <input matInput placeholder="Número exterior residencia"
+                  formControlName="informer_resident_exterior_number" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Número interior residencia</mat-label>
+                <input matInput placeholder="Número interior residencia"
+                  formControlName="informer_resident_interior_number" maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Domicilio</mat-label>
+                <input matInput placeholder="Domicilio" [readonly]="true" [value]="getInformerFullAddress()">
+              </mat-form-field>
+            </div>
+
+            <div class="title-block">Medios de contacto</div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Teléfono</mat-label>
+                <input matInput placeholder="Teléfono" formControlName="informer_phone" maxlength="{{maxLengthMain}}"
+                  [textMask]="{mask: mask}">
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Correo electrónico</mat-label>
+                <input matInput placeholder="Correo electrónico" formControlName="informer_email"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+            </div>
+
+          </form>
+        </mat-tab>
+
+        <!--STEP 4------------------------------------------------------------------------------------------------------------------------------------>
+
+        <mat-tab label="Control interno 2" [disabled]="checkDisabledTab(3)">
+          <form fxLayout="column" [formGroup]="formStep5" autocomplete="off">
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div class="title-block first" fxFlex="99" fxLayout.lt-md="column">
+                <label class="title" fxFlex="34">Control</label>
+                <label *ngIf="editing && dataEdit" fxFlex="14" class="id">ID: {{dataEdit.id}}</label>
+                <label *ngIf="editing && dataEdit" fxFlex="26" class="date">Fecha: {{created_date}}</label>
+                <label *ngIf="hasEditPermissions" class="edit" fxFlex="24">
+                  <button *ngIf="editing" (click)="activateEditMethod()" class="edit-button" mat-raised-button
+                    color="accent">{{!activeEdit ? 'Editar' : 'Cancelar edición'}} <img [src]="getImageEdit()"></button>
+                </label>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Área de fiscalía</mat-label>
+                <mat-select placeholder="Área de fiscalía" formControlName="capture_agency_number_id">
+                  <mat-option *ngFor="let capture_agency_number of catalogs.capture_agency_numbers"
+                    [value]="capture_agency_number.id">
+                    {{capture_agency_number.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Acumuladas</mat-label>
+                <input matInput placeholder="Acumuladas" formControlName="ic2_accumulated"
+                  maxlength="{{maxLengthMain}}">
+              </mat-form-field>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Tipo de hecho (Clasificación interna final)</mat-label>
+                  <mat-select placeholder="Tipo de hecho (Clasificación interna final)"
+                    formControlName="crime_final_classification_id">
+                    <mat-option *ngFor="let crime of catalogs.crimes" [value]="crime.id">
+                      {{crime.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="title-block">Localizaciones, bajas y activas</div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                <mat-form-field fxFlex="100" appearance="outline">
+                  <mat-label>Estatus de la indagatoria</mat-label>
+                  <mat-select placeholder="Estatus de la indagatoria" formControlName="status_file_id"
+                    (selectionChange)="changeStatusFiles($event)">
+                    <mat-option *ngFor="let status_file of catalogs.status_files" [value]="status_file.id">
+                      {{status_file.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <mat-form-field fxFlex="33" appearance="outline" *ngIf="showLocateMissingList()">
+                <mat-label>Fecha de cierre de indagatoria</mat-label>
+                <input matInput (dateChange)="setDateForm5($event, 'date_of_low_file')"
+                  [value]="getDateValue(formStep5, 'date_of_low_file')"
+                  (dateInput)="setDateForm5($event, 'date_of_low_file')" [matDatepicker]="dateLowFile"
+                  placeholder="Fecha de cierre de indagatoria" disabled [max]="maxDate">
+                <mat-datepicker-toggle matSuffix [for]="dateLowFile"></mat-datepicker-toggle>
+                <mat-datepicker #dateLowFile [disabled]="editing && !activeEdit"></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="group-victims" *ngIf="showStatusFiles()">
+              <div class="title-block">Localización de víctima</div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+                <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column" *ngIf="showLocateMissingList()">
+                  <mat-form-field fxFlex="100" appearance="outline">
+                    <mat-label>Condición del Localizado</mat-label>
+                    <mat-select placeholder="Condición del Localizado" formControlName="localized_condition_id">
+                      <mat-option *ngFor="let localized_condition of getCatalogConditions(catalogs.localized_conditions)"
+                        [value]="localized_condition.id">
+                        {{localized_condition.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <mat-form-field fxFlex="33"
+                  [ngClass]="{'error-required': formStep5.get('localized_victim_date').invalid && formStep5.get('localized_victim_date').touched}"
+                  appearance="outline" *ngIf="showStatusExpedientLocalized()">
+                  <mat-label>Fecha de localización de la persona</mat-label>
+                  <input matInput (dateChange)="setDateForm5($event, 'localized_victim_date')"
+                    [value]="getDateValue(formStep5, 'localized_victim_date')"
+                    (dateInput)="setDateForm5($event, 'localized_victim_date')" [matDatepicker]="dateLocalizedVictim"
+                    placeholder="Fecha de localización de la persona" disabled required [max]="maxDate">
+                  <mat-datepicker-toggle matSuffix [for]="dateLocalizedVictim"></mat-datepicker-toggle>
+                  <mat-datepicker #dateLocalizedVictim [disabled]="editing && !activeEdit"></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="33" appearance="outline" *ngIf="showLocateMissingList()">
+                  <mat-label>Descripción del de estatus de indagatoria</mat-label>
+                  <input matInput placeholder="Descripción del de estatus de indagatoria"
+                    formControlName="justification_of_low_status" maxlength="{{maxLengthMain}}">
+                </mat-form-field>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column" fxLayout.lt-md="column"
+                *ngIf="showStatusExpedientLocalized()">
+
+                <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                  <mat-form-field fxFlex="100" appearance="outline">
+                    <input type="text"
+                      (blur)="onBlurAutocomplete($event, formStep5, 'localized_country_id', 'localized_country_object')"
+                      placeholder="País de localización" aria-label="País de lozalización" matInput
+                      formControlName="localized_country_object" [matAutocomplete]="autoNatLocalized">
+                    <mat-autocomplete #autoNatLocalized="matAutocomplete" [displayWith]="displayFn"
+                      (optionSelected)="selectedAutocomplete($event, formStep5, 'localized_country_id', 'localized_country_observations')">
+                      <mat-option *ngFor="let option of filteredNationalitiesLocalized | async" [value]="option">
+                        {{option.name}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+
+                  <mat-form-field fxFlex="100"
+                    *ngIf="validateShowOtherAutocomplete(formStep5, 'localized_country_id', 'localized_country_observations', catalogs.countries)"
+                    appearance="outline">
+                    <mat-label>Especificar País de localización</mat-label>
+                    <input matInput placeholder="Especificar País de localización"
+                      formControlName="localized_country_observations" maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+                </div>
+
+                <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                  <mat-form-field fxFlex="100" appearance="outline">
+                    <input type="text"
+                      (blur)="onBlurAutocomplete($event, formStep5, 'localized_federal_entity_id', 'localized_federal_entity_object')"
+                      placeholder="Entidad de localización" aria-label="Entidad de localización" matInput
+                      formControlName="localized_federal_entity_object" [matAutocomplete]="autoEntLocalized">
+                    <mat-autocomplete #autoEntLocalized="matAutocomplete" [displayWith]="displayFn"
+                      (optionSelected)="selectedAutocomplete($event, formStep5, 'localized_federal_entity_id', 'localized_federal_entity_observations')">
+                      <mat-option *ngFor="let option of filteredEntitiesLocalized | async" [value]="option">
+                        {{option.name}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+
+                  <mat-form-field fxFlex="100"
+                    *ngIf="validateShowOtherAutocomplete(formStep5, 'localized_federal_entity_id', 'localized_federal_entity_observations', catalogs.federal_entities)"
+                    appearance="outline">
+                    <mat-label>Especificar Entidad de localización</mat-label>
+                    <input matInput placeholder="Especificar Entidad de localización"
+                      formControlName="localized_federal_entity_observations" maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+                </div>
+
+                <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                  <mat-form-field fxFlex="100" appearance="outline">
+                    <input type="text"
+                      (blur)="onBlurAutocomplete($event, formStep5, 'localized_municipality_id', 'localized_municipality_object')"
+                      placeholder="Municipio de localización" aria-label="Municipio de localización" matInput
+                      formControlName="localized_municipality_object" [matAutocomplete]="autoMunLocalized">
+                    <mat-autocomplete #autoMunLocalized="matAutocomplete" [displayWith]="displayFn"
+                      (optionSelected)="selectedAutocomplete($event, formStep5, 'localized_municipality_id', 'localized_municipality_observations')">
+                      <mat-option *ngFor="let option of filteredMunicipalitiesLocalized | async" [value]="option">
+                        {{option.name}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+
+                  <mat-form-field fxFlex="100"
+                    *ngIf="validateShowOtherAutocomplete(formStep5, 'localized_municipality_id', 'localized_municipality_observations', catalogs.municipalities)"
+                    appearance="outline">
+                    <mat-label>Especificar Municipio de localización</mat-label>
+                    <input matInput placeholder="Especificar Municipio de localización"
+                      formControlName="localized_municipality_observations" maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column" fxLayout.lt-md="column">
+                <mat-form-field fxFlex="33" appearance="outline">
+                  <mat-label>Localidad y/o colonia de localización</mat-label>
+                  <input matInput placeholder="Localidad y/o colonia de localización"
+                    formControlName="localized_locality_or_colony" maxlength="{{maxLengthMain}}">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="99" appearance="outline">
+                <mat-label>Observaciones del expediente</mat-label>
+                <textarea md-no-autogrow matInput placeholder="Observaciones del expediente"
+                  formControlName="file_observations"></textarea>
+              </mat-form-field>
+            </div>
+
+          </form>
+        </mat-tab>
+
+        <!--STEP 5------------------------------------------------------------------------------------------------------------------------------------>
+
+        <mat-tab label="Imputados" [disabled]="checkDisabledTab(4)">
+          <form fxLayout="column" [formGroup]="formStep6" autocomplete="off">
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div class="title-block first" fxFlex="99" fxLayout.lt-md="column">
+                <label class="title" fxFlex="34">Imputados</label>
+                <label *ngIf="editing && dataEdit" fxFlex="14" class="id">ID: {{dataEdit.id}}</label>
+                <label *ngIf="editing && dataEdit" fxFlex="26" class="date">Fecha: {{created_date}}</label>
+                <label *ngIf="hasEditPermissions" class="edit" fxFlex="24">
+                  <button *ngIf="editing" (click)="activateEditMethod()" class="edit-button" mat-raised-button
+                    color="accent">{{!activeEdit ? 'Editar' : 'Cancelar edición'}} <img [src]="getImageEdit()"></button>
+                </label>
+              </div>
+            </div>
+
+            <div class="radio-button-container">
+              <label [class.text-danger-label]="accuseds.invalid && (accuseds.dirty || accuseds.touched)"
+                class="radio-button-element">¿Se cuenta con datos de algún imputado?</label>
+              <mat-radio-group formControlName="accuseds">
+                <mat-radio-button class="radio-button-element" [value]="yesNoObject[0]">SI</mat-radio-button>
+                <mat-radio-button class="radio-button-element" [value]="yesNoObject[1]">NO</mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <span *ngIf="showAccuseds()">
+              <div fxLayout="column" formArrayName="accuseds_list"
+                *ngFor="let accused of formStep6.controls['accuseds_list'].controls; let i = index;"
+                style="border-bottom: 1px solid #eee; margin-bottom: 30px;">
+                <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+                  <mat-form-field [formGroupName]="i" fxFlex="33" appearance="outline">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput placeholder="Nombre" formControlName="name" maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+
+                  <mat-form-field [formGroupName]="i" fxFlex="33" appearance="outline">
+                    <mat-label>Apellido paterno</mat-label>
+                    <input matInput placeholder="Apellido paterno" formControlName="lastname"
+                      maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+
+                  <mat-form-field [formGroupName]="i" fxFlex="33" appearance="outline">
+                    <mat-label>Apellido materno</mat-label>
+                    <input matInput placeholder="Apellido materno" formControlName="mothers_lastname"
+                      maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+                </div>
+
+                <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+
+                  <mat-form-field fxFlex="33" appearance="outline">
+                    <mat-label>Nombre completo</mat-label>
+                    <input matInput placeholder="Nombre completo" [readonly]="true" [value]="getAccusedFullName(i)">
+                  </mat-form-field>
+
+                  <mat-form-field [formGroupName]="i" fxFlex="33" appearance="outline">
+                    <mat-label>Alias</mat-label>
+                    <input matInput placeholder="Alias" formControlName="alias" maxlength="{{maxLengthMain}}">
+                  </mat-form-field>
+
+                  <mat-form-field fxFlex="33" appearance="outline" [formGroupName]="i">
+                    <mat-label>Fecha de nacimiento</mat-label>
+                    <input matInput (dateChange)="setDateForm6($event, 'accuseds_list', i, 'date_of_birth')"
+                      [value]="getDateValue(formStep6, 'accuseds_list', i, 'date_of_birth')"
+                      (dateInput)="setDateForm6($event, 'accuseds_list', i, 'date_of_birth')"
+                      [matDatepicker]="accusedDateOfBirth" placeholder="Fecha de nacimiento" disabled [max]="maxDate">
+                    <mat-datepicker-toggle matSuffix [for]="accusedDateOfBirth"></mat-datepicker-toggle>
+                    <mat-datepicker #accusedDateOfBirth [disabled]="editing && !activeEdit"></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+                  <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                    <mat-form-field fxFlex="100" appearance="outline" [formGroupName]="i">
+                      <mat-label>Edad al momento del evento</mat-label>
+                      <mat-select placeholder="Edad al momento del evento" formControlName="age_when_fact_id">
+                        <mat-option *ngFor="let age of catalogs.ages" [value]="age.id">
+                          {{age.age}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
+                    <mat-form-field fxFlex="100" appearance="outline" [formGroupName]="i">
+                      <mat-label>Sexo</mat-label>
+                      <mat-select placeholder="Sexo" formControlName="gender_id">
+                        <mat-option *ngFor="let gender of catalogs.genders" [value]="gender.id">
+                          {{gender.name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div fxFlex="100">
+                    <button mat-flat-button color="warn" class="delete-field"
+                      style="margin-left: 15px; margin-bottom: 15px;"
+                      (click)="onDeleteFormGroup(i, formStep6, 'accuseds_list')" type="button"
+                      [disabled]="editing && !activeEdit"><i class="material-icons">delete</i> Eliminar
+                      imputado</button>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div fxFlex="100">
+                  <button mat-flat-button color="primary" class="add-field"
+                    (click)="onAddFormGroup(accuseds_list, formStep6, 'accuseds_list', 'accused')" type="button"
+                    [disabled]="editing && !activeEdit"><i class="material-icons">add_circle</i> Agregar
+                    imputado</button>
+                </div>
+              </div>
+            </span>
+
+          </form>
+        </mat-tab>
+
+        <!--STEP 6------------------------------------------------------------------------------------------------------------------------------------>
+
+        <mat-tab label="Aseguramientos" [disabled]="checkDisabledTab(5)">
+          <form fxLayout="column" [formGroup]="formStep7">
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <div class="title-block first" fxFlex="99" fxLayout.lt-md="column">
+                <label class="title" fxFlex="34">Aseguramientos</label>
+                <label *ngIf="editing && dataEdit" fxFlex="14" class="id">ID: {{dataEdit.id}}</label>
+                <label *ngIf="editing && dataEdit" fxFlex="26" class="date">Fecha: {{created_date}}</label>
+                <label *ngIf="hasEditPermissions" class="edit" fxFlex="24">
+                  <button *ngIf="editing" (click)="activateEditMethod()" class="edit-button" mat-raised-button
+                    color="accent">{{!activeEdit ? 'Editar' : 'Cancelar edición'}} <img [src]="getImageEdit()"></button>
+                </label>
+              </div>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="100" appearance="outline">
+                <mat-label>Inmuebles</mat-label>
+                <textarea matInput md-no-autogrow placeholder="Inmuebles" formControlName="assurance_properties"
+                  rows="7"></textarea>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="100" appearance="outline">
+                <mat-label>Bienes (Varios)</mat-label>
+                <textarea matInput md-no-autogrow placeholder="Bienes" formControlName="assurance_goods"
+                  rows="7"></textarea>
+              </mat-form-field>
+            </div>
+
+          </form>
+        </mat-tab>
+
+      </mat-tab-group>
+
+      <div class="buttons" *ngIf="!saving">
+        <div class="left-buttons">
+          <button class="submit" mat-raised-button color="accent" *ngIf="activeEdit && tabSelected != 6"
+            (click)="save(1)" [disabled]="(editing && activeEdit && !this.isConnected)"
+            [class.disabled]="(editing && activeEdit && !this.isConnected)">Guardar y continuar</button>
+          <button class="submit" mat-raised-button color="accent" *ngIf="activeEdit" (click)="save(2)"
+            [disabled]="(editing && activeEdit && !this.isConnected)"
+            [class.disabled]="(editing && activeEdit && !this.isConnected)">Guardar</button>
+        </div>
+        <div class="right-buttons">
+          <button class="previous" mat-raised-button color="accent" (click)="previousTab()"
+            *ngIf="tabSelected != 0">Regresar</button>
+          <button class="next" mat-raised-button color="accent" (click)="nextTab()"
+            *ngIf="tabSelected != 6">Siguiente</button>
+        </div>
+      </div>
+
+      <div *ngIf="saving" class="loading">
+        <mat-spinner [diameter]="35"></mat-spinner>
+      </div>
+    </div>
+  </div>
+
+</div>

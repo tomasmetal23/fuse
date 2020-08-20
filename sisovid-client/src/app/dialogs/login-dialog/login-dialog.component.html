@@ -1,0 +1,47 @@
+<div mat-dialog-content class="m-0" fusePerfectScrollbar>
+  <!--<div class="header">
+    <div class="close">
+      <mat-icon class="mat-icon ng-tns-c9-1 material-icons pointer" role="img" aria-hidden="true"
+        (click)="dialogRef.close(false)">close</mat-icon>
+    </div>
+  </div>-->
+
+  <div class="wrapper-login-dialog">
+    <p fxLayoutAlign="center center">
+      <label class="confirmation">Iniciar sesión</label>
+    </p>
+
+    <div class="message">Tu sesión ha caducado, favor de volver a iniciar sesión</div>
+
+    <div class="login-dialog">
+      <form class="login-form" name="loginForm" [formGroup]="loginForm" novalidate autocomplete="off">
+        <mat-form-field>
+          <input matInput placeholder="Usuario" formControlName="user" maxlength="20">
+          <mat-error *ngIf="loginFormErrors.user.required">
+            Usuario requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="form-password" [ngClass]="{ 'showPass': showPass }">
+          <input matInput [type]="showPass ? 'text' : 'password'" placeholder="Contraseña" formControlName="password"
+            maxlength="16">
+          <mat-icon matSuffix (click)="showPass = !showPass">{{showPass ? 'visibility_off' : 'visibility'}}</mat-icon>
+          <mat-error *ngIf="loginFormErrors.password.required">
+            Contraseña requerida
+          </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button class="submit-button mt-50" (click)="login()" [disabled]="loginForm.invalid"
+          *ngIf="!loading">
+          Ingresar
+        </button>
+
+        <div *ngIf="loading" class="loading">
+          <mat-spinner [diameter]="60"></mat-spinner>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>

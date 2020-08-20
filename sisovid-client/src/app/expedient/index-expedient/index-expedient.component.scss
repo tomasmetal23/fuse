@@ -1,0 +1,386 @@
+@import 'src/@fuse/scss/fuse';
+@import 'src/config/scss/identity';
+
+@import url('https://fonts.googleapis.com/css?family=Heebo');
+
+.page-layout {
+  background: #fff;
+  width: 100%;
+  padding: 10px 60px;
+
+  .group-victims {
+    flex-direction: column !important;
+  }
+
+  .navbar {
+    padding: 20px 60px 20px 53px;
+    width: 100%;
+    vertical-align: middle;
+    align-content: center;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .title {
+      max-width: 300px;
+      display: flex;
+      flex: 1;
+      color: #434a54;
+      font-size: 19px;
+      font-weight: 700;
+      text-align: left;
+      align-items: center;
+      position: relative;
+      padding-left: 0px;
+    }
+  }
+
+  .content {
+    .stepper-wrapper {
+      .content-buttons {
+        text-align: right;
+        padding-bottom: 23px;
+        margin-top: -60px;
+
+        mat-button-toggle-group {
+          width: 108px;
+        }
+      }
+
+      button {
+        &.add-field {
+          margin: 3px 15px 1.34374em 15px;
+          width: auto;
+          background-color: #845579;
+          color: white;
+
+          .material-icons {
+            color: white;
+            font-size: 21px;
+          }
+
+          &:hover {
+            background-color: #6d335e;
+          }
+        }
+
+        &.delete-field {
+          height: 41px;
+          margin-top: 3px;
+          margin-right: 15px;
+          width: auto;
+          color: #434a54;
+          background-color: #e5e5e6;
+
+          .material-icons {
+            font-size: 21px;
+          }
+
+          &:hover {
+            background-color: #cfcfd1 !important;
+          }
+        }
+      }
+
+      mat-form-field {
+        padding: 0px 15px;
+      }
+
+      .mat-form-field-wrapper {
+        font-size: 14px;
+        font-family: Heebo;
+      }
+
+      .mat-tab-label {
+        min-width: 25px !important;
+        padding: 5px;
+        font-weight: 700;
+        font-size: 14px;
+        white-space: normal;
+        height: 75px;
+        padding: 0px 15px !important;
+        width: 167px;
+        text-align: left;
+        letter-spacing: 0.05em;
+        font-family: Roboto;
+        font-weight: bold;
+        opacity: 0.6;
+
+        .mat-tab-label-content {
+          white-space: normal;
+        }
+      }
+
+      .mat-tab-label.mat-tab-label-active {
+        min-width: 25px !important;
+        padding: 5px;
+        color: #845579;
+        font-weight: 700;
+        font-size: 14px;
+        opacity: 1;
+      }
+
+      .mat-form-field-appearance-outline .mat-form-field-infix {
+        padding: 0.6em 0 !important;
+      }
+
+      .mat-ink-bar {
+        background-color: #845579 !important;
+        height: 7px;
+      }
+
+      .mat-tab-header {
+        margin-bottom: 20px;
+      }
+
+      .title-block {
+        padding-left: 17px;
+        font-size: 15px;
+        color: #7d868c;
+        font-weight: bold;
+        font-family: Roboto;
+        letter-spacing: 2px;
+        padding-bottom: 24px;
+        padding-top: 8px;
+
+        .title {
+          padding-right: 90px;
+          text-align: left;
+        }
+
+        .edit {
+          text-align: right;
+
+          .edit-button {
+            color: #6d335e;
+            background-color: #fff !important;
+            font-size: 13px;
+
+            img {
+              width: 17px;
+              margin-top: -6px;
+              padding-left: 1px;
+            }
+          }
+
+          .edit-button:hover {
+            background-color: #ccb4c3 !important;
+          }
+        }
+
+        &.first {
+          text-align: center;
+          margin: 0px 20px;
+          padding-left: 0px;
+
+          label {
+            margin: 10px 0px;
+          }
+
+          .id {
+            background: #e5e5e6;
+            padding: 8px;
+            border-radius: 5px;
+            margin-right: 20px;
+            align-items: center;
+            display: flex;
+            justify-content: center;
+          }
+
+          .date {
+            background: #e5e5e6;
+            padding: 8px;
+            border-radius: 5px;
+            align-items: center;
+            display: flex;
+            justify-content: center;
+          }
+        }
+      }
+
+      .radio-button-container {
+        display: flex;
+        align-content: center;
+        align-items: center;
+        padding-left: 5px;
+        padding-bottom: 20px;
+
+        .radio-button-element {
+          margin: 0 10px;
+        }
+      }
+
+      .error-required {
+        .mat-form-field-underline {
+          background-color: red !important;
+        }
+
+        .mat-form-field-label {
+          color: red;
+        }
+      }
+
+      .mat-list .mat-list-item,
+      .mat-list .mat-list-option,
+      .mat-nav-list .mat-list-item,
+      .mat-nav-list .mat-list-option,
+      .mat-selection-list .mat-list-item,
+      .mat-selection-list .mat-list-option {
+        height: 24px !important;
+      }
+
+      .mat-list {
+        width: 500px;
+      }
+
+      .content-list-file {
+        max-height: 96px !important;
+        overflow-y: auto;
+      }
+
+      .column {
+        flex-direction: column !important;
+      }
+
+      .addFile {
+        background-color: #845579 !important;
+      }
+
+      .addFile:hover {
+        background-color: #6d335e !important;
+      }
+
+      .title {
+        color: rgba(0, 0, 0, 0.54);
+      }
+
+      .iconFile {
+        color: rgba(0, 0, 0, 0.54);
+      }
+
+      .mat-line {
+        display: flex;
+        justify-content: space-between;
+
+        .removeMedia {
+          cursor: pointer;
+          color: rgba(0, 0, 0, 0.54);
+        }
+
+        .removeMedia:hover {
+          color: #d6264a;
+        }
+      }
+
+      textarea {
+        resize: none !important;
+      }
+
+      /*    INPUTS   */
+
+      .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+        color: #989ba1;
+      }
+
+      .mat-form-field-appearance-outline.mat-form-field-invalid.mat-form-field-invalid .mat-form-field-outline-thick {
+        color: #e05457;
+      }
+
+      .mat-form-field-label {
+        //color: #989ba1;
+        font-size: 13px;
+        font-family: 'Heebo Light';
+      }
+
+      .mat-input-element.mat-form-field-autofill-control,
+      .mat-select-value {
+        color: #989ba1;
+        font-size: 15px;
+        //font-family: 'Heebo Regular';
+        text-transform: uppercase;
+      }
+
+      .radio-button-container {
+        label {
+          color: #989ba1;
+          font-size: 15px;
+          font-family: 'Heebo Medium';
+        }
+      }
+
+      .mat-radio-outer-circle {
+        border-color: #e5e5e6;
+      }
+
+      .mat-radio-outer-circle {
+        background-color: #e5e5e6;
+      }
+
+      .mat-radio-button.mat-accent .mat-radio-inner-circle {
+        background-color: #ccb4c3 !important;
+      }
+
+      .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+        background-color: #6d335e;
+      }
+
+      .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+        border-color: #6d335e;
+      }
+
+      .mat-radio-checked .mat-radio-inner-circle {
+        transform: scale(0.8);
+      }
+
+      /*    INPUTS   */
+    }
+
+    .text-danger-label {
+      color: #f44336 !important;
+    }
+
+    .buttons {
+      /*text-align: right;*/
+      padding: 30px 0px;
+      display: flex;
+
+      .left-buttons {
+        flex: 1;
+      }
+
+      .right-buttons {
+        flex: 1;
+        text-align: right;
+      }
+
+      .previous {
+        color: #434a54;
+        background-color: #e5e5e6 !important;
+      }
+
+      .previous:hover {
+        background-color: #cfcfd1 !important;
+      }
+
+      .next,
+      .submit {
+        color: #fff;
+        background-color: #845579;
+      }
+
+      .next:hover,
+      .submit:hover {
+        background-color: #6d335e;
+      }
+
+      button {
+        margin-left: 10px;
+      }
+    }
+
+    .loading {
+      float: right;
+    }
+  }
+}

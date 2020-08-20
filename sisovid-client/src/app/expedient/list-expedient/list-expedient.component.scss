@@ -1,0 +1,135 @@
+@import "src/@fuse/scss/fuse";
+@import "src/config/scss/identity";
+
+#list-expedient {
+  background: #FFF;
+  width: 100%;
+  padding: 10px 60px;
+
+  .navbar {
+    padding: 20px 60px 20px 53px;
+    width: 100%;
+    vertical-align: middle;
+    align-content: center;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .title {
+      max-width: 300px;
+      display: flex;
+      flex: 1;
+      color: #434A54;
+      font-size: 19px;
+      font-weight: 700;
+      text-align: left;
+      align-items: center;
+      position: relative;
+    }
+  }
+
+  .content {
+    .title-block {
+      padding-left: 15px;
+      font-size: 18px;
+      color: #60656e;
+      font-weight: bold;
+      font-family: Arial;
+      letter-spacing: 2px;
+      padding-bottom: 30px;
+      padding-top: 35px;
+    }
+
+    .new-expedient-button-content {
+      align-self: flex-end;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+
+      .files-search-wrapper {
+        align-items: center;
+        background-color: #FFFFFF;
+        padding: 0 5px 0 20px;
+        box-shadow: 0px 0px 4px #00000029;
+        border-radius: 58px;
+        height: 42px;
+
+        input {
+          width: 250px;
+          height: 20px;
+          margin-left: 10px !important;
+        }
+    
+        .files-search, .files-search::placeholder {
+          font-size: 14px;
+          font-family: Open Sans;
+          color: #8B8E94;
+        }
+      }
+
+      button {
+        color: #FFF;
+        background-color: #845579 !important;
+        height: 36px;
+
+        &:hover {
+          background-color: #6D335E !important;
+        }
+      }
+    }
+
+    .table-wrap {
+      position: relative;
+
+      .loading-shade {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 56px;
+        right: 0;
+        background: rgba(0, 0, 0, 0.15);
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      border: solid 1px #ccc;
+
+      table {
+        width: 100%;
+
+        tbody {
+          tr:hover {
+            background: #6D335E;
+
+            td {
+              color: #FFF;
+            }
+          }
+
+          tr {
+            td {
+              .status {
+                background: #ccc;
+                border-radius: 12px;
+                padding: 5px 14px;
+              }
+            }
+          }
+
+          .edit {
+            cursor: pointer;
+            color: #999;
+          }
+
+          .edit:hover {
+            color: #444;
+          }
+        }
+      }
+    }
+  }
+}

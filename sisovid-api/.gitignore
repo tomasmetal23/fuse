@@ -1,0 +1,14 @@
+/vendor
+/.idea
+Homestead.json
+Homestead.yaml
+.env
+composer.lock
+/public/logs
+public/logs
+/public/adminer.php
+/public/adminer.css
+/public/assets/avatars
+public/logs/
+public/logs/
+*.DS_Store

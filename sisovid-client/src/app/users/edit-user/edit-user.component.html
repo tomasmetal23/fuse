@@ -1,0 +1,105 @@
+<div class="dialog-content-wrapper" >
+
+  <div mat-dialog-content class="m-0 page-layout carded fullwidth" fusePerfectScrollbar>
+
+    <div class="header">
+      <div class="title">{{title}}</div>
+      <div class="close" style="position: absolute;top: 0px;right: 0;">
+        <mat-icon class="mat-icon ng-tns-c9-1 material-icons close-dialog" (click)="dialogRef.close(false)" role="img" aria-hidden="true" >close</mat-icon>
+      </div>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="start start" fxLayout.gt-md="row">
+        <form  [formGroup]="form" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" autocomplete="off">
+            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+              <mat-form-field class="form-input" fxFlex="100">
+                <input formControlName="username"  matInput placeholder="Usuario" required>
+                <mat-error *ngIf="form.controls.username.errors?.maxlength">Máximo 50 caracteres</mat-error>
+                <mat-error *ngIf="form.controls.username.errors?.required">Ingrese un usuario</mat-error>
+                <mat-error *ngIf="form.controls.username.errors?.pattern">Solo se permiten minusculas, puntos y guiones bajos</mat-error>
+              </mat-form-field>
+              <mat-form-field class="form-input" fxFlex="100">
+                <input formControlName="name"  matInput placeholder="Nombre" required>
+                <mat-error *ngIf="form.controls.name.errors?.required">Ingrese nombre del usuario</mat-error>
+                <mat-error *ngIf="form.controls.name.errors?.maxlength">Máximo 100 caracteres</mat-error>
+              </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+              <mat-form-field class="form-input" fxFlex="100">
+                <input formControlName="last_name"  matInput placeholder="Apellido Paterno" required>
+                <mat-error *ngIf="form.controls.last_name.errors?.maxlength">Máximo 100 caracteres</mat-error>
+                <mat-error *ngIf="form.controls.last_name.errors?.required">Ingrese apellidos paternos de usuario</mat-error>
+              </mat-form-field>
+              <mat-form-field class="form-input" fxFlex="100">
+                <input formControlName="m_last_name"  matInput placeholder="Apellido Materno" required>
+                <mat-error *ngIf="form.controls.m_last_name.errors?.maxlength">Máximo 100 caracteres</mat-error>
+                <mat-error *ngIf="form.controls.m_last_name.errors?.required">Ingrese apellidos maternos de usuario</mat-error>
+              </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+              <mat-form-field class="form-input" fxFlex="100">
+                <input formControlName="email"  matInput placeholder="Correo Electronico" required>
+                <mat-error *ngIf="form.controls.email.errors?.email">Correo no valido</mat-error>
+                <mat-error *ngIf="form.controls.email.errors?.maxlength">Máximo 100 caracteres</mat-error>
+                <mat-error *ngIf="form.controls.email.errors?.required">Ingrese un correo electrónico</mat-error>
+              </mat-form-field>
+
+              <mat-form-field fxFlex="100" class="form-input">
+                <input [formControl]="formControlRole" placeholder="Roles *" matInput  
+                  [matAutocomplete]="role" (blur)="onBlurOptions($event, 'role_id', 'formControlRole')">
+                <mat-autocomplete class="form-input" #role="matAutocomplete" (optionSelected)="optionSelected($event, 'role_id', 'formControlRole', '_optionRole')">
+                  <mat-option *ngFor="let option of filterRoles | async " [value]="option">
+                    {{option.name}} - {{ option.type === 'DIRECTION' ? 'Dirección' : 'Área' }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="formControlRole.errors?.required">Ingrese un rol</mat-error>
+              </mat-form-field>             
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+              <mat-form-field fxFlex="100" class="form-input">
+                <input [formControl]="formControlDirection" placeholder="Dirección *" matInput #directionInput
+                  [matAutocomplete]="direction" (blur)="onBlurOptions($event, 'direction_id', 'formControlDirection')">
+                <mat-autocomplete class="form-input" #direction="matAutocomplete" (optionSelected)="optionSelected($event, 'direction_id', 'formControlDirection', '_loadAreas')">
+                  <mat-option *ngFor="let option of filterDirections | async " [value]="option">
+                    {{option.name}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="formControlDirection.errors?.required">Seleccione una Dirección</mat-error>
+              </mat-form-field>
+        
+              <mat-form-field fxFlex="100" class="form-input" id="mat-form-area-field">
+                <input [formControl]="formControlArea" placeholder="Área *" matInput  (click)="clickArea()"
+                  [matAutocomplete]="area" (blur)="onBlurOptions($event, 'area_id', 'formControlArea')">
+                <mat-autocomplete class="form-input" #area="matAutocomplete" (optionSelected)="optionSelected($event, 'area_id', 'formControlArea')">
+                  <mat-option *ngFor="let option of filterAreas | async " [value]="option">
+                    {{option.name}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="formControlArea.errors?.required">Seleccione una Área</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+              <mat-form-field class="form-input" fxFlex="100">
+                <input formControlName="password"  matInput placeholder="Contraseña" [type]="hide ? 'password' : 'text'">
+                <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>             
+                <mat-error *ngIf="form.controls.password.errors?.minlength">Mínimo 8 caracteres</mat-error>
+                <mat-error *ngIf="form.controls.password.errors?.maxlength">Máximo 16 caracteres</mat-error>
+                <mat-error *ngIf="form.controls.password.errors?.required">Ingrese una contraseña</mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="form-input" fxFlex="100">
+                <input formControlName="confirm_password"  matInput placeholder="Repite Contraseña" [type]="re_hide ? 'password' : 'text'">
+                <mat-icon matSuffix (click)="re_hide = !re_hide">{{re_hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                <mat-error *ngIf="form.controls.confirm_password.errors?.mustMatch">Contraseñas no coinciden</mat-error>              
+              </mat-form-field>
+            </div>
+
+            <div class="footer-dialog content-save-button" fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+              <button mat-button (click)="save()" mat-raised-button color="accent" > Guardar </button>
+            </div>
+          </form>
+    </div>
+  </div>
+</div>

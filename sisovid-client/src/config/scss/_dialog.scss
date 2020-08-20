@@ -1,0 +1,216 @@
+@import "src/@fuse/scss/fuse";
+
+.dialog-content-wrapper {
+    width: 100%;    
+    height: 100%;
+    position: relative;
+    display: flex;
+
+    .header {        
+        padding-bottom: 10px;
+
+        .title {        
+            font-size: 20px;
+            text-align: center;
+            font-weight: 700;
+            color: $title-color;
+            cursor: default;
+        }
+    }
+
+    [mat-dialog-content] {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+
+        > .content {
+            display: flex;
+            flex: 1;
+
+            textarea {
+                resize: none;
+            }
+
+            .horizontal-stepper-wrapper {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+
+                mat-horizontal-stepper {
+                    display: flex;
+                    flex-direction: column;
+                    flex: 1;
+
+                    .mat-horizontal-stepper-header-container {
+                        &:not(:last-child):before {
+                            top: 15px !important;
+                        }
+                    }
+
+                    .mat-horizontal-content-container {
+                        display: flex;
+                        flex-direction: column;
+                        flex: 1;                        
+                        overflow-y: auto;
+                        justify-content: center;                        
+
+                        mat-checkbox {
+                            padding-bottom: 15px;
+                        }
+                    }
+                }
+            }
+        }
+
+        > .footer {
+            padding-top: 10px !important;
+        }
+    }
+      
+    mat-form-field {
+        padding: 0px 10px;    
+    }
+
+    form {
+        width: 100% !important;
+    }
+
+    .mat-toolbar.mat-accent {
+        background: #fff;
+    }
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    .content {
+        max-height: 493px !important;
+    }
+        
+    .footer {
+        padding-top: 0px !important;
+
+        button {
+            margin-left: 15px;
+
+            &.cancel {
+                box-shadow: none;
+                &:active {
+                    box-shadow: none;
+                }
+            }
+
+            &.save {
+                @include button-primary;                
+            }
+
+            &[disabled] {
+                cursor: not-allowed;
+            }
+        }
+    }
+
+    .loading {
+        mat-spinner {
+            margin: auto;
+        }
+    }
+}
+
+
+.mat-dialog-system {
+    max-width: 800px  !important; 
+    /** width: 90%; */
+
+    .mat-dialog-container {        
+        padding: 20px 15px !important;
+        border-radius: $border-radius !important;
+
+        .mat-horizontal-stepper-header {
+            margin-bottom: 0px;
+            padding-top: 10px;
+            padding-bottom: 5px;
+            // height: 65px !important;
+        }
+
+        .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::before, .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::after, [dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::after, [dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::before {
+            top: 20px !important;
+        }
+
+        .mat-stepper-horizontal-line {
+            top: 20px;
+        }
+
+        .mat-step-label {
+            padding-top: 5px;
+        }
+
+        .mat-horizontal-content-container {
+            padding: 0px 10px !important; 
+        }
+
+        .mat-form-field {
+            padding-bottom: 5px;
+        }
+
+        .header {
+            .close {
+                position: absolute;
+                top: 0px;
+                right: 0;
+                cursor: pointer;
+            }
+        }
+
+        .footer {
+            .button-change-step {
+                @include button-primary;
+                background-color: #989898 !important;
+                margin-right: 10px;
+                color: #ffffff !important;
+                line-height: 35px !important;
+                font-size: 14px !important;
+                font-weight: 700 !important;
+            
+                &.active {
+                    background-color: #615f5f !important;
+                    color: #fff !important;
+                }
+                &:hover {
+                    background-color: #293e87 !important;
+                    color: #fff !important;   
+                }
+            }
+
+            .button-change-step:disabled,
+            .button-change-step[disabled]{
+                cursor: not-allowed;
+            }
+        }
+    }
+}
+
+.mat-step-icon{
+    background-color: #293e87 !important;
+}
+
+.mat-dialog-system-md {
+    @extend .mat-dialog-system;
+    max-width: 900px !important;
+    max-height: 580px;
+}
+
+.dialog-confirm{
+    mat-dialog-container {
+        border-radius: 10px;
+        width: 550px !important;
+    }
+}
+
+.dialog-user-info{
+    mat-dialog-container {
+        padding: 0px;
+        width: 400px !important;
+        border-radius: 0px !important;
+    }
+}

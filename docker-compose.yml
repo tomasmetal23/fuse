@@ -1,0 +1,61 @@
+version:  '3.5'
+
+volumes:
+  sisovid-pgdata:
+    name: sisovid_pgdata
+
+networks:
+  backend:
+    name: sisovid_backend
+  frontend:
+    name: sisovid_frontend
+
+services: 
+  sisovid_db:
+    build: ./sisovid/postgres
+    container_name: sisovid_db
+    image: postgres-sisovid
+    env_file: ./sisovid-db/postgres/.env
+    volumes:
+      - sisovid-pgdata:/var/lib/postgresql/data/
+    # ports:
+    #   - "5434:5432"
+    restart: on-failure
+    networks: 
+      - backend
+  sisovid_api:
+    build: ./sisovid-api/
+    container_name: sisovid_api
+    working_dir: /sisovid
+    entrypoint: ./docker-entrypoint.sh
+    volumes:
+      - ./sisovid:/sisovid
+    ports:
+      - "8010:8010"
+    depends_on:
+      - sisovid_db
+    environment: 
+      WAIT_HOSTS: sisovid_db:5432
+      WAIT_HOSTS_TIMEOUT: 120
+    restart: always
+    stdin_open: true
+    networks: 
+      - backend
+      - frontend
+  sisovid_client:
+    build: ./sisovid-client
+    container_name: sisovid_client
+    volumes: 
+      - ./sisovid-client:/app
+      - /app/node_modules
+    ports:
+      - "3010:3010"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - sisovid_backend
+    env_file: ./sisovid-api/.env.example
+    command: npm start
+    stdin_open: true
+    networks: 
+      - frontend

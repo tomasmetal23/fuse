@@ -1,0 +1,68 @@
+<mat-toolbar class="p-0 mat-elevation-z4">
+
+  <mat-progress-bar *ngIf="showLoadingBar" class="loading-bar" color="accent" mode="indeterminate"></mat-progress-bar>
+
+  <div fxFlex fxFill fxLayout="row" fxLayoutAlign="start center">
+
+    <div fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start center" style="height: 100%">
+
+      <button mat-icon-button class="navbar-toggle-button" *ngIf="!hiddenNavbar && !rightNavbar"
+        (click)="toggleSidebarOpen('navbar')" fxHide.gt-md>
+        <mat-icon class="primary-50-fg menu-icon">menu</mat-icon>
+      </button>
+
+      <div class="toolbar-separator" *ngIf="!hiddenNavbar && !rightNavbar" fxHide.gt-md></div>
+
+      <div fxLayout="row" fxLayoutAlign="start center" *ngIf="horizontalNavbar">
+          <div class="logo ml-16">
+              <img class="logo-icon" src="assets/images/logos/fuse.svg">
+          </div>
+      </div>
+      <!-- 
+      <div class="px-8 px-mat-16">
+          <fuse-shortcuts [navigation]="navigation"></fuse-shortcuts>
+      </div> -->
+      <div class="px-8 px-mat-16 fiscalia">
+          <img [routerLink]="'/'" class="logo-icon" src="assets/images/fiscalia-white.png">
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="start center" *ngIf="horizontalNavbar">
+        <div class="logo ml-16">
+          <img class="logo-icon" src="assets/images/logos/fuse.svg">
+        </div>
+      </div>
+
+    </div>
+
+    <div class="" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
+
+      <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <span class="userName">{{userName | uppercase}}</span>
+          <div class="avatar">
+            {{initials}}
+            <div class="img" *ngIf="hasImage" [ngStyle]="{ 'background-image': avatar }"></div>
+          </div>
+          <mat-icon class="s-28" fxHide.xs>arrow_drop_down</mat-icon>
+        </div>
+      </button>
+
+      <mat-menu #userMenu="matMenu" [overlapTrigger]="false">
+
+        <!--<button mat-menu-item (click)="toggleProfile()">
+          <mat-icon>settings</mat-icon>
+          <span>Configuración de Perfil</span>
+        </button>-->
+
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Salir</span>
+        </button>
+
+      </mat-menu>
+
+    </div>
+
+  </div>
+
+</mat-toolbar>

@@ -1,0 +1,27 @@
+<div mat-dialog-content class="m-0" fusePerfectScrollbar>
+  <div class="header">
+    <div class="close">
+      <mat-icon class="mat-icon ng-tns-c9-1 material-icons pointer" role="img" aria-hidden="true"
+        (click)="dialogRef.close(false)">close</mat-icon>
+    </div>
+  </div>
+
+  <p fxLayoutAlign="center center">
+    <label class="confirmation">Confirmación</label>
+  </p>
+
+  <div class="content-dialog" [innerHTML]="data.content"></div>
+</div>
+<div mat-dialog-actions fxLayoutAlign="center end" *ngIf="data.type === 'edit'">
+  <button mat-button (click)="close(false)" class="btn-cancel">No, Continuar editando</button>
+  <button mat-button (click)="close(true)" class="btn-accept">Sí, Cancelar</button>
+</div>
+
+<div mat-dialog-actions fxLayoutAlign="center end" *ngIf="data.type === 'delete'">
+  <button mat-button (click)="close(false)" class="btn-cancel">Cancelar</button>
+  <button mat-button (click)="close(true)" class="btn-accept">Aceptar</button>
+</div>
+
+<div mat-dialog-actions fxLayoutAlign="center end" *ngIf="data.type === 'message'">
+  <button mat-button (click)="close(false)" class="btn-accept">Aceptar</button>
+</div>
