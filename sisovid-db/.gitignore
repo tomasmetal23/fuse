@@ -1,0 +1,38 @@
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+media
+
+# Python # 
+*.py[cod] 
+*$py.class
+
+# jpeg #
+*.jpg
+*.jpeg
+
+# node dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# misc
+.DS_Store
+.env*
+
+# production react
+/build
+
+# VSCode
+.vscode
+
+# SQL
+*.sql

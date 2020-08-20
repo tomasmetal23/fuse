@@ -12,14 +12,13 @@ networks:
 
 services: 
   sisovid_db:
-    build: ./sisovid/postgres
+    build: ./sisovid-db
     container_name: sisovid_db
-    image: postgres-sisovid
-    env_file: ./sisovid-db/postgres/.env
+    env_file: ./sisovid-db/.env
     volumes:
       - sisovid-pgdata:/var/lib/postgresql/data/
-    # ports:
-    #   - "5434:5432"
+    ports:
+      - "5434:5432"
     restart: on-failure
     networks: 
       - backend
@@ -53,7 +52,7 @@ services:
     environment:
       - NODE_ENV=development
     depends_on:
-      - sisovid_backend
+      - sisovid_api
     env_file: ./sisovid-api/.env.example
     command: npm start
     stdin_open: true
