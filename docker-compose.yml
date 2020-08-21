@@ -49,7 +49,7 @@ services:
       - ./sisovid-client:/app
       - /app/node_modules
     ports:
-      - "3010:3010"
+      - "4200:4200"
     environment:
       - NODE_ENV=development
     depends_on:
