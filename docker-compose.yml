@@ -25,10 +25,10 @@ services:
   sisovid_api:
     build: ./sisovid-api/
     container_name: sisovid_api
-    working_dir: /sisovid
+    working_dir: /app
     entrypoint: ./docker-entrypoint.sh
     volumes:
-      - ./sisovid:/sisovid
+      - ./sisovid-api:/app
     ports:
       - "8010:8010"
     depends_on:
