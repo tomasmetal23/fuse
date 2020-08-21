@@ -4,19 +4,39 @@ ENTRYPOINT [ "/bin/bash " ]
 
 COPY [".", "/app/"]
 
-RUN apt-get update
+RUN echo "memory_limit = -1" > /usr/local/etc/php/conf.d/memory_limit.ini && \
+    echo "extension=pdo_pgsql" > /usr/local/etc/php/conf.d/pdo_pgsql.ini && \
+    echo "extension=pgsql" > /usr/local/etc/php/conf.d/pgsql.ini
 
-RUN apt-get install -y curl
-RUN docker-php-ext-install mbstring
-RUN apt-get install -y git
-RUN apt-get install -y unzip
+RUN apt-get update && \
+    apt-get install -y \
+        curl \
+        git \
+        unzip \
+        libpng-dev \
+        libpq-dev
+
+RUN docker-php-ext-install mbstring && \
+    docker-php-ext-install gd && \
+    docker-php-ext-install pgsql && \
+    docker-php-ext-install pdo_pgsql
+
 RUN curl -sS https://getcomposer.org/installer | php
+
 RUN mv composer.phar /usr/local/bin/composer
+
 RUN chmod +x /usr/local/bin/composer
 
 WORKDIR /app
 
+RUN composer require niklasravnsborg/laravel-pdf
+
+RUN composer install
+
+RUN composer update --no-scripts  
+
 EXPOSE 8010
 
 ADD ./wait /wait
+
 RUN chmod +x /wait

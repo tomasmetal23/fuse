@@ -2,6 +2,6 @@
 
 /wait
 
-composer install
+php artisan migrate
 
-php -S localhost:8010 -t public
+php -S 0.0.0.0:8010 -t public

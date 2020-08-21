@@ -29,6 +29,7 @@ services:
     entrypoint: ./docker-entrypoint.sh
     volumes:
       - ./sisovid-api:/app
+      - /app/vendor
     ports:
       - "8010:8010"
     depends_on:
