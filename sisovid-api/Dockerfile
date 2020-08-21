@@ -15,7 +15,6 @@ RUN mv composer.phar /usr/local/bin/composer
 RUN chmod +x /usr/local/bin/composer
 
 WORKDIR /app
-    
 
 EXPOSE 8010
 
