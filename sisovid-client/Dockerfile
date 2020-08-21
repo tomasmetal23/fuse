@@ -12,4 +12,4 @@ COPY [".", "/app/"]
 
 EXPOSE 3000
 
-CMD ["ng", "serve"]
+CMD ["npm", "start"]
