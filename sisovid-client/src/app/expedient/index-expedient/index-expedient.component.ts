@@ -134,11 +134,13 @@ export class IndexExpedientComponent extends FormCanDeactivate implements OnInit
 		this.formStep1 = this.formBuilder.group({
 			// Identificadores
 			file_number: ['', [Validators.required, Validators.maxLength(this.maxLengthMain)]],
+			police_report_date: ['', []],
 			year_file_number: [this.year, [Validators.pattern(/^\d{4}$/)]],
 			fe_district_id: ['', [Validators.required]],
 			file_type_id: ['', [Validators.required]],
 			reception_via_id: [''],
 			crime_initial_classification_id: ['', [Validators.required]],
+			complementary_complaint: [''],
 			judicializable: [''],
 			area_id: ['']
 		});

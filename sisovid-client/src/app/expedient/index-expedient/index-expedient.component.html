@@ -22,13 +22,41 @@
               </div>
             </div>
 
+            <!-- Esta es la fecha en la que se hace la denuncia
+
+              nombrar de una mejor forma
+
+                Funciona
+            
+            -->
+
+
             <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
               <mat-form-field fxFlex="33" appearance="outline">
                 <mat-label>Fecha de la denuncia</mat-label>
+                <input matInput placeholder="Fecha de la denuncia" 
+                  [value]="getDateValue(formStep1, 'police_report_date')"
+                  (dateInput)="setDateForm1($event, 'police_report_date')" [matDatepicker]="datePoliceReport"
+                  placeholder="Fecha de nacimiento *" disabled [max]="maxDate"> 
+                <mat-datepicker-toggle matSuffix [for]="datePoliceReport"></mat-datepicker-toggle>
+                <mat-datepicker #datePoliceReport [disabled]="editing && !activeEdit"></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <!-- Esta es la fecha de la denuncia en la que se registra en la nube
+            
+            -->
+
+            <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Fecha en la que se registra la denuncia en la nube</mat-label>
                 <input matInput placeholder="Fecha de la denuncia" [readonly]="true"
                   [value]="(created_date != '') ? created_date : todayDate" required>
               </mat-form-field>
             </div>
+
+
+            
 
             <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
               <div fxFlex="1 0 auto" fxLayout="row" fxFlex="33" class="column">
@@ -68,7 +96,22 @@
               </div>
             </div>
 
+            <!-- Denuncia complementaria?  
+
+              FALTA FUNCIONALIDAD
+            
+            -->
+
             <div fxFlex="1 0 auto" fxLayout="row" fxLayout.lt-md="column">
+              <mat-form-field fxFlex="33" appearance="outline">
+                <mat-label>Denuncia complementaria</mat-label>
+                <mat-select placeholder="Denuncia complementaria" formControlName="complementary_complaint">
+                  <mat-option *ngFor="let value of yesNoObject" [value]="value">
+                    {{ (value) ? 'Sí' : 'No' }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
               <mat-form-field fxFlex="33" appearance="outline">
                 <mat-label>Judicializable</mat-label>
                 <mat-select placeholder="Judicializable" formControlName="judicializable">

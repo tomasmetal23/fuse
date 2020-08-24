@@ -16,9 +16,12 @@ class CreateFilesInternalControl1Table extends Migration
     {
         Schema::create('files_internal_control_1', function (Blueprint $table) {
             $table->increments('id');
+            $table->date('police_report_date')->nullable();
             
             $table->unsignedInteger('file_id');
             $table->foreign('file_id')->references('id')->on('files');
+
+            $table->tinyInteger('reincidente')->nullable();  
 
             $table->unsignedInteger('fe_district_id');
             $table->foreign('fe_district_id')->references('id')->on('fe_districts');
@@ -31,6 +34,8 @@ class CreateFilesInternalControl1Table extends Migration
 
             $table->unsignedInteger('crime_initial_classification_id');
             $table->foreign('crime_initial_classification_id')->references('id')->on('crimes');
+
+            $table->tinyInteger('complementary_complaint')->nullable();
 
             $table->tinyInteger('judicializable')->nullable();
 

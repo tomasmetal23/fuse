@@ -24,6 +24,7 @@ class CreateFilesParticipantVehiclesSuspiciousTable extends Migration
             $table->string('fact_suspicious_vehiculo_sub_brand',200)->nullable();
             $table->string('fact_suspicious_vehiculo_model',200)->nullable();
             $table->string('fact_suspicious_vehiculo_color',200)->nullable();
+            $table->string('fact_suspicious_vehiculo_serie',200)->nullable();
 
             $table->tinyInteger('active')->default(1);
             
