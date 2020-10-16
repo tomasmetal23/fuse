@@ -1,4 +1,4 @@
-FROM node:12.16.1-buster
+FROM node:12.16.1-buster as build
 
 COPY ["package.json", "/app/"]
 
@@ -10,6 +10,15 @@ RUN npm install
 
 COPY [".", "/app/"]
 
-EXPOSE 4200
+RUN npm run build
 
-CMD ["npm", "start"]
+FROM nginx:1.17.8-alpine
+
+RUN rm -rf /usr/share/nginx/html/*
+
+COPY --from=build /app/dist /usr/share/nginx/html
+
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
+
