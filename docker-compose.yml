@@ -2,7 +2,7 @@ version:  '3.5'
 
 networks:
   backend:
-    name: sisovid_backend
+    driver: bridge
 
 services:
   sisovid_api:
@@ -30,6 +30,8 @@ services:
       - backend
     ports:
       - "8010:8010"
-      - "81:81"
+      - "80:81"
+    links:
+      - sisovid_api
     depends_on:
       - sisovid_api
