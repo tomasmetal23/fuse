@@ -10,7 +10,7 @@ RUN npm install
 
 COPY [".", "/app/"]
 
-RUN npm  --max-old-space-size=1024 run build
+RUN npm  --max-old-space-size=2048 run build
 
 FROM nginx:1.17.8-alpine
 
