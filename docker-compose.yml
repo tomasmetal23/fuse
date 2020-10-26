@@ -30,7 +30,7 @@ services:
       - backend
     ports:
       - "8010:8010"
-      - "80:81"
+      - "80:80"
     links:
       - sisovid_api
     depends_on:
