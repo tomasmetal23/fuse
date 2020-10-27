@@ -13,7 +13,6 @@ services:
     volumes:
       - ./sisovid-api:/app
       - /app/vendor
-      - ./sisovid-api/default:/etc/nginx/sites-available/default
     ports:
       - "8010"
     environment:
