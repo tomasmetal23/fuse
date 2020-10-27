@@ -9,7 +9,7 @@ services:
     build: ./sisovid-api/
     container_name: sisovid_api
     working_dir: /app
-    entrypoint: ./docker-entrypoint.sh
+    command: sh -c '/etc/init.d/nginx start && php -S 0.0.0.0:8010 -t public'
     volumes:
       - ./sisovid-api:/app
       - /app/vendor
