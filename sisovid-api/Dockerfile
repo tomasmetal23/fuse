@@ -23,8 +23,6 @@ RUN docker-php-ext-install mbstring && \
 
 RUN curl -sS https://getcomposer.org/installer | php
 
-COPY default /etc/nginx/sites-available
-
 RUN mv composer.phar /usr/local/bin/composer
 
 RUN chmod +x /usr/local/bin/composer
