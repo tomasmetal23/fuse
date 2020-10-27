@@ -13,7 +13,7 @@ services:
     volumes:
       - ./sisovid-api:/app
       - /app/vendor
-    expose:
+    ports:
       - "8010"
     environment:
       WAIT_HOSTS_TIMEOUT: 120
