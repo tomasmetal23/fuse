@@ -9,7 +9,7 @@ services:
     build: ./sisovid-api/
     container_name: sisovid_api
     working_dir: /app
-    command: sh -c '#php artisan migrate:fresh && /etc/init.d/nginx start && php -S 0.0.0.0:8010 -t public'
+    command: sh -c '/etc/init.d/nginx start && php -S 0.0.0.0:8010 -t public'
     volumes:
       - ./sisovid-api:/app
       - /app/vendor
