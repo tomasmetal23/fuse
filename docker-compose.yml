@@ -14,7 +14,7 @@ services:
       - ./sisovid-api:/app
       - /app/vendor
     ports:
-      - "8010"
+      - "8010:8010"
     environment:
       WAIT_HOSTS_TIMEOUT: 120
     restart: on-failure
@@ -29,14 +29,13 @@ services:
     networks:
       - backend
     ports:
-      - "8010"
-      - "80"
-    labels:  
-      - "traefik.enable=true"
-      - "traefik.http.routers.nginx.entrypoints=websecure"
-      - "traefik.http.routers.nginx.rule=Host(`test1.lagocha2020.com`)"
-      - "traefik.http.routers.nginx.tls.certresolver=lets-encr"
-    links:
-      - sisovid_api
+      - "80:80"
+    #labels:  
+    #  - "traefik.enable=true"
+    #  - "traefik.http.routers.nginx.entrypoints=websecure"
+    #  - "traefik.http.routers.nginx.rule=Host(`test1.lagocha2020.com`)"
+    #  - "traefik.http.routers.nginx.tls.certresolver=lets-encr"
+    #links:
+    #  - sisovid_api
     depends_on:
       - sisovid_api
