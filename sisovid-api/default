@@ -1,8 +1,8 @@
 server {
-        listen 8010 default_server;
+        listen 8010;
 
 
-        server_name localhost;
+        server_name 66.42.86.22;
         location / {
                
          proxy_pass http://localhost:8010;
