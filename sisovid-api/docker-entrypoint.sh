@@ -4,4 +4,4 @@
 
 #php artisan migrate:fresh
 
-php -S 0.0.0.0:8010 -t public
+php -S 0.0.0.0:8020 -t public

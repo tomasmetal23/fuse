@@ -37,4 +37,4 @@ RUN composer install
 
 RUN composer update --no-scripts  
 
-EXPOSE 80
+EXPOSE 8010
