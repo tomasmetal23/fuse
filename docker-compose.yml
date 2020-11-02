@@ -35,7 +35,7 @@ services:
     #  - "traefik.http.routers.nginx.entrypoints=websecure"
     #  - "traefik.http.routers.nginx.rule=Host(`test1.lagocha2020.com`)"
     #  - "traefik.http.routers.nginx.tls.certresolver=lets-encr"
-    #links:
-    #  - sisovid_api
+    links:
+      - sisovid_api
     depends_on:
       - sisovid_api
