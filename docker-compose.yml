@@ -14,7 +14,7 @@ services:
       - ./sisovid-api:/app
       - /app/vendor
     ports:
-      - "8010:8020"
+      - "8010:8010"
     environment:
       WAIT_HOSTS_TIMEOUT: 120
     restart: on-failure
